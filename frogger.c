@@ -3,18 +3,40 @@
 #include <stdbool.h>
 #include <time.h>
 #include <pthread.h>
-#include "ReadSNES.h"
 
 int gameMenu();
 void initializeGame();
 
-typedef struct Tile {
+// typedef struct Tile {
+// 	int x;
+// 	int y;
+// 	bool platform;
+// 	bool obstacle;
+// 	bool leftDirection;
+// }
+
+typedef struct Object {
 	int x;
 	int y;
-	bool platform;
-	bool obstacle;
+	int left;
+	int right;
+	int top;
+	int bottom;
+	int width;
+	bool isPlatform;
 	bool leftDirection;
 }
+
+typedef struct Stage {
+	Object objects[10];
+
+}
+typedef struct GameState {
+	Stage stages[4];
+}
+
+
+struct GameState game;
 
 //Global variables
 int score;
@@ -98,6 +120,20 @@ void initializeGame()
 	extraLives = 4;
 	secondsRemaining = 999;
 	movesRemaining = 200;
+
+	for(int i = 0; i < 4; i++)
+	{
+		for(int j = 0; j < 10; j++)
+		{
+			game.stages[i].objects[j].width = 32;
+			game.stages[i].objects[j].x1 = 0;
+			game.stages[i].objects[j].x2 = game.stages[i].objects[j].x1 + game.stages[i].objects[j].width;
+			game.stages[i].objects[j].y1 = 32*j;
+			game.stages[i].objects[j].y2 = 32*j + 32;
+			game.stages[i].objects[j].isPlatform = false;
+			game.stages[i].objects[j].leftDirection = j%2;
+		}
+	}
 }
 
 void drawPixel(GameState *theGame)
