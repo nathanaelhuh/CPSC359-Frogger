@@ -102,7 +102,7 @@ int getButton()
 
 
 void initializeGame();
-int *gameMenu(void *param);
+void *gameMenu(void *param);
 void *playerInput(void *param);
 void *gameState(void *param);
 void update();
@@ -152,7 +152,7 @@ int main(int argc, char **argv)
     pthread_create(&mainThread, &attr, gameMenu, "1");
 }
 
-int *gameMenu(void *param)
+void *gameMenu(void *param)
 {
 	
 	//This is the main game menu that has start and quit
@@ -198,7 +198,7 @@ int *gameMenu(void *param)
 	}
 	else
 	{
-		return 0;
+		
 	}
 }
 
