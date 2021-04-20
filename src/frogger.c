@@ -463,7 +463,7 @@ void *playerInput(void *param)
 void update(struct GameState *game)
 {
 	printf("\nUpdate");
-	int collide = collisionDetection(&game);
+	int collide = collisionDetection(game);
 	if(collide != 0 && game->stages->isWater)
 	{
 		game->frog.x = game->frog.x + game->stages[currentStage].objects[collide].velocity;
@@ -497,10 +497,10 @@ void *gameState(void *param)
 	bool exit = false;
 	while(!exit)
 	{
-		update(&game);
+		update(game);
 		//Clear screen
 		//Draw
-		exit = checkExit(&game);
+		exit = checkExit(game);
 	}
 	pthread_exit(NULL);
 }
