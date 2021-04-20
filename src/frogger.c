@@ -99,6 +99,7 @@ void *gameState(void *param);
 void update();
 int collisionDetection();
 bool checkExit();
+void gamePlay();
 
 struct Tile {
 	int x;
@@ -263,15 +264,15 @@ void *playerInput(void *param)
 				//Pause game
 			case 4:		//Up
 				//Move frog up
-				frog.y = frog.y + 1
+				frog.y = frog.y + 1;
 			case 5:		//Down
-				frog.y = frog.y - 1
+				frog.y = frog.y - 1;
 			case 6:		//Left
 				//Move frog left
-				frog.x = frog.x - 1
+				frog.x = frog.x - 1;
 			case 7:		//Right
 				//Move frog right
-				frog.x = frog.x + 1
+				frog.x = frog.x + 1;
 			case 8:		//A
 			case 9:		//X
 			case 10:	//Left bumper
