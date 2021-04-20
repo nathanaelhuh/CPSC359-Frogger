@@ -183,7 +183,7 @@ void *gameState(void *param);
 void update(struct GameState *game);
 int collisionDetection(struct GameState *game);
 bool checkExit(struct GameState *game);
-void *gamePlay();
+void *gamePlay(void *param);
 
 
 int currentStage;
@@ -379,7 +379,7 @@ void initializeGame(struct GameState *game)
 // 	memcpy(theGame->framebuffer->fptr, theGame->stage, 1280*720*2);
 // }
 
-void *gamePlay()
+void *gamePlay(void *param)
 {
 	printf("\nGamePlay");
 	struct GameState game;
