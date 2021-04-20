@@ -24,10 +24,10 @@
 //Initialized GPIO lines
 void initializeGPIO(unsigned int *gpio)
 {
-    	INP_GPIO(gpio, CLK);
-    	OUT_GPIO(gpio, CLK);
-    	INP_GPIO(gpio, LAT);
-    	OUT_GPIO(gpio, LAT);
+	INP_GPIO(gpio, CLK);
+	OUT_GPIO(gpio, CLK);
+	INP_GPIO(gpio, LAT);
+	OUT_GPIO(gpio, LAT);
 	INP_GPIO(gpio, DAT);
 }
 
@@ -67,20 +67,20 @@ int readData(unsigned int *gpio)
 void printMessage(unsigned short code)
 {
 	//2D char array for names of each button pushed, max size 13 based on string size
-    	char buttonB[13] = "B";
-    	char buttonY[13] = "Y";
-    	char buttonSelect[13] = "Select";
-    	char buttonStart[13] = "Start";
-    	char buttonJpUp[13] = "Joy-pad UP";
-    	char buttonJpDown[13] = "Joy-pad DOWN";
-    	char buttonJpLeft[13] = "Joy-pad LEFT";
-    	char buttonJpRight[13] = "Joy-pad RIGHT";
-    	char buttonA[13] = "A";
-    	char buttonX[13] = "X";
-    	char buttonLeft[13] = "Left";
-    	char buttonRight[13] = "Right";
+	char buttonB[13] = "B";
+	char buttonY[13] = "Y";
+	char buttonSelect[13] = "Select";
+	char buttonStart[13] = "Start";
+	char buttonJpUp[13] = "Joy-pad UP";
+	char buttonJpDown[13] = "Joy-pad DOWN";
+	char buttonJpLeft[13] = "Joy-pad LEFT";
+	char buttonJpRight[13] = "Joy-pad RIGHT";
+	char buttonA[13] = "A";
+	char buttonX[13] = "X";
+	char buttonLeft[13] = "Left";
+	char buttonRight[13] = "Right";
 
-    	char* buttonList[12] = {buttonB, buttonY, buttonSelect, buttonStart, buttonJpUp, buttonJpDown, buttonJpLeft, buttonJpRight, buttonA, buttonX, buttonLeft, buttonRight};
+	char* buttonList[12] = {buttonB, buttonY, buttonSelect, buttonStart, buttonJpUp, buttonJpDown, buttonJpLeft, buttonJpRight, buttonA, buttonX, buttonLeft, buttonRight};
   	printf("You have pressed %s\n", buttonList[code]);
 }
 
@@ -122,28 +122,28 @@ int getButton()
 {
 	printf("Created by Nathanael Huh\n");
 
-        unsigned int *gpioPtr = getGPIOPtr();
-        initializeGPIO(gpioPtr);
-        unsigned short button;
-        while(true)	//Loops until start is pushed
-        {
-            	printf("Please press a button\n");
-            	unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
-			for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
+	unsigned int *gpioPtr = getGPIOPtr();
+	initializeGPIO(gpioPtr);
+	unsigned short button;
+	while(1 == 1)	//Loops until start is pushed
+	{
+		printf("Please press a button\n");
+		unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
+		for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
+		{
+			int value = (code >> i) & 1;	//Gets bit of in i position
+			if(value == 0)	//If button is pushed
 			{
-				int value = (code >> i) & 1;	//Gets bit of in i position
-				if(value == 0)	//If button is pushed
-				{
-					button = i;	//Sets button pushed to index for printing
-						//printMessage(button);	//Prints button pushed
-						return button;
-					if(button == 3)
-						break;	//Breaks out of loop if start is pressed
-				}
+				button = i;	//Sets button pushed to index for printing
+					printMessage(button);	//Prints button pushed
+					return button;
+				if(button == 3)
+					break;	//Breaks out of loop if start is pressed
 			}
-			printf("\n");	//New line for nicer organization
-			delayMicroseconds(100000);	//Pauses program to delay input (avoids spamming)
-        }
+		}
+		printf("\n");	//New line for nicer organization
+		delayMicroseconds(100000);	//Pauses program to delay input (avoids spamming)
+	}
 }
 
 
@@ -214,32 +214,43 @@ void *gameMenu(void *param)
 	bool start = false;
 	bool quit = false;
 	bool startHighlighted = true;
-	while(start == false && quit == false)
+	while(start == false && quit == false)	//Loops until start is pushed
 	{
-		int button = getButton();
-		if(button == 6)	//Left
+		unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
+		for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
 		{
-			startHighlighted = true;
-		}
-		if(button == 7)	//Right
-		{
-			startHighlighted = false;
-		}
-		if(button == 3)	//Start
-		{
-			start = true;
-		}
-		if(button == 8)	//A
-		{
-			if(startHighlighted)
+			int value = (code >> i) & 1;	//Gets bit of in i position
+			if(value == 0)	//If button is pushed
 			{
-				start = true;
-			}
-			else
-			{
-				quit = true;
+				button = i;	//Sets button pushed to index for printing
+				printMessage(button);	//Prints button pushed
+				if(button == 6)	//Left
+				{
+					startHighlighted = true;
+				}
+				if(button == 7)	//Right
+				{
+					startHighlighted = false;
+				}
+				if(button == 3)	//Start
+				{
+					start = true;
+				}
+				if(button == 8)	//A
+				{
+					if(startHighlighted)
+					{
+						start = true;
+					}
+					else
+					{
+						quit = true;
+					}
+				}
 			}
 		}
+		printf("\n");	//New line for nicer organization
+		delayMicroseconds(100000);	//Pauses program to delay input (avoids spamming)
 	}
 
 	if(start)
@@ -249,10 +260,10 @@ void *gameMenu(void *param)
 		pthread_attr_init(&attr);
 		int tc = pthread_create(&gameThread, &attr, gamePlay, "1");
 		if(tc)
-                {
-                        printf("ERROR creating thread, %d\n", tc);
-                        exit(-1);
-                }
+		{
+				printf("ERROR creating thread, %d\n", tc);
+				exit(-1);
+		}
 	}
 	else
 	{
