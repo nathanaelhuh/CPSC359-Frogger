@@ -435,15 +435,15 @@ void *playerInput(void *param)
 				//Pause game
 			case 4:		//Up
 				//Move frog up
-				&game->frog.y = game->frog.y + 1;
+				&game->frog.y = &game->frog.y + 1;
 			case 5:		//Down
-				&game->frog.y = game->frog.y - 1;
+				&game->frog.y = &game->frog.y - 1;
 			case 6:		//Left
 				//Move frog left
-				&game->frog.x = game->frog.x - 1;
+				&game->frog.x = &game->frog.x - 1;
 			case 7:		//Right
 				//Move frog right
-				&game->frog.x = game->frog.x + 1;
+				&game->frog.x = &game->frog.x + 1;
 			case 8:		//A
 			{}
 			case 9:		//X
@@ -455,7 +455,7 @@ void *playerInput(void *param)
 			default:
 			{}
 		}
-		if(&game.gameOver)
+		if(&game->gameOver)
 			pthread_exit(NULL);
 	}
 }
@@ -507,16 +507,16 @@ void *gameState(void *param)
 
 bool checkExit(struct GameState *game)
 {
-	if(currentStage == 3 && game.frog.y >= 20)
+	if(currentStage == 3 && game->frog.y >= 20)
 	{
 		//WIN
-		game.gameOver = true;
+		game->gameOver = true;
 		return true;
 	}
-	if(game.extraLives == 0 || game.movesRemaining == 0 || game.secondsRemaining == 0)
+	if(game->extraLives == 0 || game->movesRemaining == 0 || game->secondsRemaining == 0)
 	{
 		//LOSE
-		game.gameOver = true;
+		game->gameOver = true;
 		return true;
 	}
 	return false;
