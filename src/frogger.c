@@ -422,7 +422,8 @@ void *playerInput(void *param)
 	printf("\nInput");
 	while(true)
 	{
-		int button = getButton();
+		//int button = getButton();
+		int button = 5;
 		switch(button)
 		{
 			case 0:		//B
@@ -494,13 +495,14 @@ void *gameState(void *param)
 {
 	printf("\nGameState");
 	bool exit = false;
-	while(exit == false)
+	while(!exit)
 	{
 		update();
 		//Clear screen
 		//Draw
 		exit = checkExit();
 	}
+	pthread_exit(NULL);
 }
 
 bool checkExit()
