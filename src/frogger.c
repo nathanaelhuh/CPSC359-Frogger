@@ -341,16 +341,16 @@ int main(int argc, char **argv)
 void initializeGame(struct GameState *game)
 {
 	printf("\nInit game");
-	game->startTime = clock();
-	game->score = 0;
-	game->extraLives = 4;
-	game->secondsRemaining = 999;
-	game->movesRemaining = 200;
-	game->gameOver = false;
-	currentStage = 0;
+	// game->startTime = clock();
+	// game->score = 0;
+	// game->extraLives = 4;
+	// game->secondsRemaining = 999;
+	// game->movesRemaining = 200;
+	// game->gameOver = false;
+	// currentStage = 0;
 
-	game->frog.x = 10;
-	game->frog.y = 0;
+	// game->frog.x = 10;
+	// game->frog.y = 0;
 
 	for(int i = 0; i < 4; i++)
 	{
