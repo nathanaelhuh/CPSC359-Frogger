@@ -224,7 +224,7 @@ void initializeGame()
 			game.stages[i].objects[j].velocity = temp;		//TODO: Might change object velocities later
 		}
 		temp = -temp;
-		game.stages[i]->isWater = i%2;
+		game.stages[i].isWater = i%2;
 	}
 }
 
@@ -284,7 +284,7 @@ void *playerInput(void *param)
 void update()
 {
 	int collide = collisionDetection();
-	if(collide != 0 && game.stages.isWater)
+	if(collide != 0 && game.stages->isWater)
 	{
 		frog.x = frog.x + game.stages[currentStage].objects[collide].velocity;
 	}
