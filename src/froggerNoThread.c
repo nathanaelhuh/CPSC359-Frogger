@@ -124,7 +124,7 @@ int getButton(unsigned int *gpio)
 	while(1 == 1)	//Loops until start is pushed
 	{
 		printf("Please press a button\n");
-		unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
+		unsigned short code = readSNES(gpio);	//Gets series of bits for buttons pushed
 		for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
 		{
 			int value = (code >> i) & 1;	//Gets bit of in i position
