@@ -291,7 +291,7 @@ void initializeGame()
 // 	memcpy(theGame.framebuffer.fptr, theGame.stage, 1280*720*2);
 // }
 
-void *gamePlay()
+void gamePlay()
 {
 	printf("\nGamePlay");
 	initializeGame();
@@ -383,7 +383,7 @@ int collisionDetection()
 	return 0;
 }
 
-void *gameState()
+void gameState()
 {
 	printf("\nGameState");
 	bool exit = false;
