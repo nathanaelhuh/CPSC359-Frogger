@@ -395,6 +395,7 @@ void *gamePlay(void *param)
 	pthread_create(&gameStateThread, &attr, gameState, &game);
 	while(!game.gameOver)
 	{
+		delayMicroseconds(100000);
 		printf("\nPLAYING");
 	}
 	// pthread_join(inputThread, NULL);
