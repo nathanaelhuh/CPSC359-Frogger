@@ -320,7 +320,7 @@ void gamePlay(unsigned int *gpio)
 {
 	printf("\nGamePlay");
 	initializeGame();
-    gameState(gpioPtr);
+    gameState(gpio);
 
 }
 
@@ -383,7 +383,7 @@ void gameState(unsigned int *gpio)
 	bool exit = false;
 	while(!exit)
 	{
-        int button = getButton(gpioPtr);
+        int button = getButton(gpio);
         switch(button)
         {
             case 0:		//B
