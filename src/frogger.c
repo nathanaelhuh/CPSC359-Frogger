@@ -214,6 +214,9 @@ void *gameMenu(void *param)
 	bool start = false;
 	bool quit = false;
 	bool startHighlighted = true;
+	unsigned int *gpioPtr = getGPIOPtr();
+	initializeGPIO(gpioPtr);
+	unsigned short button;
 	while(start == false && quit == false)	//Loops until start is pushed
 	{
 		unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
