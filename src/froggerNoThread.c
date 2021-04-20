@@ -137,12 +137,9 @@ int getButton()
 				button = i;	//Sets button pushed to index for printing
 					printMessage(button);	//Prints button pushed
 					return button;
-				if(button == 3)
-					break;	//Breaks out of loop if start is pressed
+				
 			}
 		}
-		printf("\n");	//New line for nicer organization
-		delayMicroseconds(100000);	//Pauses program to delay input (avoids spamming)
 	}
 }
 
@@ -269,6 +266,8 @@ int main(int argc, char **argv)
                 quit = true;
             }
         }
+        printf("\n");	//New line for nicer organization
+		delayMicroseconds(100000);	//Pauses program to delay input (avoids spamming)
     }
 	if(start)
 	{
@@ -388,7 +387,7 @@ void gameState()
 	bool exit = false;
 	while(!exit)
 	{
-        int button = playerInput();
+        int button = getButton();
         switch(button)
         {
             case 0:		//B
