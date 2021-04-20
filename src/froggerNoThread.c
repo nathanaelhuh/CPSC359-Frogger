@@ -117,7 +117,7 @@ unsigned short readSNES(unsigned int *gpio)
 }
 
 //Get button function
-int getButton()
+int getButton(unsigned int *gpio)
 {
 	//printf("Created by Nathanael Huh\n");
 	unsigned short button;
@@ -237,7 +237,7 @@ int main(int argc, char **argv)
 	// }
     while(start == false && quit == false)
     {
-        int button = getButton();
+        int button = getButton(gpioPtr);
         printMessage(button);	//Prints button pushed
         if(button == 6)	//Left
         {
@@ -316,11 +316,11 @@ void initializeGame()
 // 	memcpy(theGame.framebuffer.fptr, theGame.stage, 1280*720*2);
 // }
 
-void gamePlay()
+void gamePlay(unsigned int *gpio)
 {
 	printf("\nGamePlay");
 	initializeGame();
-    gameState();
+    gameState(gpioPtr);
 
 }
 
@@ -377,13 +377,13 @@ int collisionDetection()
 	return 0;
 }
 
-void gameState()
+void gameState(unsigned int *gpio)
 {
 	printf("\nGameState");
 	bool exit = false;
 	while(!exit)
 	{
-        int button = getButton();
+        int button = getButton(gpioPtr);
         switch(button)
         {
             case 0:		//B
