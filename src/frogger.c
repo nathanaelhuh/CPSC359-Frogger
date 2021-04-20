@@ -92,8 +92,6 @@ int getButton()
 }
 
 
-
-int gameMenu();
 void initializeGame();
 int *gameMenu(void *param);
 void *playerInput(void *param);
@@ -226,7 +224,7 @@ void initializeGame()
 			game.stages[i].objects[j].velocity = temp;		//TODO: Might change object velocities later
 		}
 		temp = -temp;
-		game.stages[i].isWater = i%2;
+		game.stages[i]->isWater = i%2;
 	}
 }
 
@@ -255,7 +253,7 @@ void *playerInput(void *param)
 {
 	while(true)
 	{
-		int button = getButton()
+		int button = getButton();
 		switch(button)
 		{
 			case 0:		//B
