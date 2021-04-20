@@ -176,14 +176,14 @@ struct GameState {
 	
 	struct Object frog;
 };
-void initializeGame(struct GameState game);
+void initializeGame(struct GameState *game);
 void *gameMenu(void *param);
-void *playerInput(struct GameState game);
-void *gameState(struct GameState game);
-void update(struct GameState game);
-int collisionDetection(struct GameState game);
-bool checkExit(struct GameState game);
-void *gamePlay(struct GameState game);
+void *playerInput(struct GameState *game);
+void *gameState(struct GameState *game);
+void update(struct GameState *game);
+int collisionDetection(struct GameState *game);
+bool checkExit(struct GameState *game);
+void *gamePlay(struct GameState *game);
 
 
 int currentStage;
@@ -338,7 +338,7 @@ int main(int argc, char **argv)
 // }
 
 
-void initializeGame(struct GameState game)
+void initializeGame(struct GameState *game)
 {
 	printf("\nInit game");
 	game.startTime = clock();
@@ -415,7 +415,7 @@ void *gamePlay()
 	}
 }
 
-void *playerInput(struct GameState game)
+void *playerInput(struct GameState *game)
 {
 	printf("\nInput");
 	while(true)
@@ -459,7 +459,7 @@ void *playerInput(struct GameState game)
 	}
 }
 
-void update(struct GameState game)
+void update(struct GameState *game)
 {
 	printf("\nUpdate");
 	int collide = collisionDetection(&game);
@@ -479,7 +479,7 @@ void update(struct GameState game)
 
 }
 
-int collisionDetection(struct GameState game)
+int collisionDetection(struct GameState *game)
 {
 	for(int i = 0; i < 10; i++)
 	{
@@ -489,7 +489,7 @@ int collisionDetection(struct GameState game)
 	return 0;
 }
 
-void *gameState(struct GameState game)
+void *gameState(struct GameState *game)
 {
 	printf("\nGameState");
 	bool exit = false;
@@ -503,7 +503,7 @@ void *gameState(struct GameState game)
 	pthread_exit(NULL);
 }
 
-bool checkExit(struct GameState game)
+bool checkExit(struct GameState *game)
 {
 	if(currentStage == 3 && game.frog.y >= 20)
 	{
@@ -511,7 +511,7 @@ bool checkExit(struct GameState game)
 		gameOver = true;
 		return true;
 	}
-	if(extraLives == 0 || movesRemaining == 0 || secondsRemaining == 0)
+	if(game.extraLives == 0 || game.movesRemaining == 0 || game.secondsRemaining == 0)
 	{
 		//LOSE
 		gameOver = true;
