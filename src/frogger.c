@@ -407,8 +407,8 @@ void *playerInput(void *param)
 	printf("\nInput");
 	while(true)
 	{
-		//int button = getButton();
-		int button = 5;
+		int button = getButton();
+		//int button = 5;
 		switch(button)
 		{
 			case 0:		//B
