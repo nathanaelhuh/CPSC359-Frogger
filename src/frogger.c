@@ -187,6 +187,7 @@ int extraLives;
 int secondsRemaining;
 int movesRemaining;
 clock_t startTime;
+bool gameOver;
 
 int currentStage;
 
@@ -348,7 +349,7 @@ void initializeGame()
 	extraLives = 4;
 	secondsRemaining = 999;
 	movesRemaining = 200;
-
+	gameOver = false;
 	currentStage = 0;
 
 	frog.x = 10;
@@ -383,6 +384,7 @@ void initializeGame()
 
 void *gamePlay()
 {
+	printf("\nGamePlay");
 	initializeGame();
 
 	//Create threads for player input and game state
@@ -409,6 +411,7 @@ void *gamePlay()
 
 void *playerInput(void *param)
 {
+	printf("\nInput");
 	while(true)
 	{
 		int button = getButton();
@@ -444,12 +447,16 @@ void *playerInput(void *param)
 			default:
 			{}
 		}
+
+		if(gameOver)
+			pthread_exit(NULL);
 	
 	}
 }
 
 void update()
 {
+	printf("\nUpdate");
 	int collide = collisionDetection();
 	if(collide != 0 && game.stages->isWater)
 	{
@@ -479,6 +486,7 @@ int collisionDetection()
 
 void *gameState(void *param)
 {
+	printf("\nGameState");
 	bool exit = false;
 	while(exit == false)
 	{
