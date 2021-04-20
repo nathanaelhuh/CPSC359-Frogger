@@ -405,42 +405,91 @@ void *playerInput(void *param)
 {
 	struct GameState *game = param;
 	printf("\nInput");
-	while(true)
+	unsigned int *gpioPtr = getGPIOPtr();
+	initializeGPIO(gpioPtr);
+	unsigned short button;
+	while(true)	//Loops until start is pushed
 	{
-		int button = getButton();
-		//int button = 5;
-		switch(button)
+		unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
+		for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
 		{
-			case 0:		//B
-			{}
-			case 1:		//Y
-			{}
-			case 2:		//Select
-			{}
-			case 3:		//Start
-				//Pause game
-			case 4:		//Up
-				//Move frog up
-				game->frog.y = game->frog.y + 1;
-			case 5:		//Down
-				game->frog.y = game->frog.y - 1;
-			case 6:		//Left
-				//Move frog left
-				game->frog.x = game->frog.x - 1;
-			case 7:		//Right
-				//Move frog right
-				game->frog.x = game->frog.x + 1;
-			case 8:		//A
-			{}
-			case 9:		//X
-			{}
-			case 10:	//Left bumper
-			{}
-			case 11:	//Right bumper
-			{}
-			default:
-			{}
+			int value = (code >> i) & 1;	//Gets bit of in i position
+			if(value == 0)	//If button is pushed
+			{
+				button = i;	//Sets button pushed to index for printing
+				printMessage(button);	//Prints button pushed
+				switch(button)
+				{
+					case 0:		//B
+					{}
+					case 1:		//Y
+					{}
+					case 2:		//Select
+					{}
+					case 3:		//Start
+						//Pause game
+					case 4:		//Up
+						//Move frog up
+						game->frog.y = game->frog.y + 1;
+					case 5:		//Down
+						game->frog.y = game->frog.y - 1;
+					case 6:		//Left
+						//Move frog left
+						game->frog.x = game->frog.x - 1;
+					case 7:		//Right
+						//Move frog right
+						game->frog.x = game->frog.x + 1;
+					case 8:		//A
+					{}
+					case 9:		//X
+					{}
+					case 10:	//Left bumper
+					{}
+					case 11:	//Right bumper
+					{}
+					default:
+					{}
+				}
+			}
 		}
+		printf("\n");	//New line for nicer organization
+		delayMicroseconds(100000);	//Pauses program to delay input (avoids spamming)
+	// while(true)
+	// {
+	// 	int button = getButton();
+	// 	//int button = 5;
+	// 	switch(button)
+	// 	{
+	// 		case 0:		//B
+	// 		{}
+	// 		case 1:		//Y
+	// 		{}
+	// 		case 2:		//Select
+	// 		{}
+	// 		case 3:		//Start
+	// 			//Pause game
+	// 		case 4:		//Up
+	// 			//Move frog up
+	// 			game->frog.y = game->frog.y + 1;
+	// 		case 5:		//Down
+	// 			game->frog.y = game->frog.y - 1;
+	// 		case 6:		//Left
+	// 			//Move frog left
+	// 			game->frog.x = game->frog.x - 1;
+	// 		case 7:		//Right
+	// 			//Move frog right
+	// 			game->frog.x = game->frog.x + 1;
+	// 		case 8:		//A
+	// 		{}
+	// 		case 9:		//X
+	// 		{}
+	// 		case 10:	//Left bumper
+	// 		{}
+	// 		case 11:	//Right bumper
+	// 		{}
+	// 		default:
+	// 		{}
+	// 	}
 		if(&game->gameOver)
 			pthread_exit(NULL);
 	}
