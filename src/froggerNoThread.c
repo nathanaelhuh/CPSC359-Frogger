@@ -178,7 +178,7 @@ struct GameState {
 };
 void initializeGame();
 void gameMenu();
-void playerInput();
+int playerInput();
 void gameState();
 void update();
 int collisionDetection();
@@ -299,7 +299,7 @@ void gamePlay()
 
 }
 
-void playerInput()
+int playerInput()
 {
 	printf("\nInput");
 	unsigned int *gpioPtr = getGPIOPtr();
@@ -315,38 +315,7 @@ void playerInput()
 			{
 				button = i;	//Sets button pushed to index for printing
 				printMessage(button);	//Prints button pushed
-				switch(button)
-				{
-					case 0:		//B
-					{}
-					case 1:		//Y
-					{}
-					case 2:		//Select
-					{}
-					case 3:		//Start
-						//Pause game
-					case 4:		//Up
-						//Move frog up
-						game.frog.y = game.frog.y + 1;
-					case 5:		//Down
-						game.frog.y = game.frog.y - 1;
-					case 6:		//Left
-						//Move frog left
-						game.frog.x = game.frog.x - 1;
-					case 7:		//Right
-						//Move frog right
-						game.frog.x = game.frog.x + 1;
-					case 8:		//A
-					{}
-					case 9:		//X
-					{}
-					case 10:	//Left bumper
-					{}
-					case 11:	//Right bumper
-					{}
-					default:
-					{}
-				}
+				return button;
 			}
 		}
 		delayMicroseconds(100000);
@@ -389,7 +358,39 @@ void gameState()
 	bool exit = false;
 	while(!exit)
 	{
-        playerInput();
+        int button = playerInput();
+        switch(button)
+        {
+            case 0:		//B
+            {}
+            case 1:		//Y
+            {}
+            case 2:		//Select
+            {}
+            case 3:		//Start
+                //Pause game
+            case 4:		//Up
+                //Move frog up
+                game.frog.y = game.frog.y + 1;
+            case 5:		//Down
+                game.frog.y = game.frog.y - 1;
+            case 6:		//Left
+                //Move frog left
+                game.frog.x = game.frog.x - 1;
+            case 7:		//Right
+                //Move frog right
+                game.frog.x = game.frog.x + 1;
+            case 8:		//A
+            {}
+            case 9:		//X
+            {}
+            case 10:	//Left bumper
+            {}
+            case 11:	//Right bumper
+            {}
+            default:
+            {}
+        }
 		update();
 		//Clear screen
 		//Draw
