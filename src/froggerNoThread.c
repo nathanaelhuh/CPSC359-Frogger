@@ -120,10 +120,7 @@ unsigned short readSNES(unsigned int *gpio)
 //Get button function
 int getButton()
 {
-	printf("Created by Nathanael Huh\n");
-
-	unsigned int *gpioPtr = getGPIOPtr();
-	initializeGPIO(gpioPtr);
+	//printf("Created by Nathanael Huh\n");
 	unsigned short button;
 	while(1 == 1)	//Loops until start is pushed
 	{
@@ -188,10 +185,14 @@ void gamePlay();
 struct GameState game;
 int currentStage;
 
+unsigned int *gpioPtr = getGPIOPtr();
+
 int main(int argc, char **argv)
 {
 	printf("\nMain");
 	printf("\nGame menu");
+    
+    initializeGPIO(gpioPtr);
 	//This is the main game menu that has start and quit
 	//Will have some sort of background and maybe animation?
 	//Loop while waiting on input
