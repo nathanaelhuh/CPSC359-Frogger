@@ -392,7 +392,7 @@ void *gamePlay()
 
 	pthread_t inputThread;
 	pthread_attr_init(&attr);
-    int tc = pthread_create(&inputThread, &attr, playerInput, "1");
+    int tc = pthread_create(&inputThread, NULL, playerInput, "1");
 	if(tc)
 	{
 			printf("ERROR creating thread, %d\n", tc);
@@ -401,7 +401,7 @@ void *gamePlay()
 
 	pthread_t gameStateThread;
 	pthread_attr_init(&attr);
-    tc = pthread_create(&gameStateThread, &attr, gameState, "1");
+    tc = pthread_create(&gameStateThread, NULL, gameState, "1");
 	if(tc)
 	{
 			printf("ERROR creating thread, %d\n", tc);
