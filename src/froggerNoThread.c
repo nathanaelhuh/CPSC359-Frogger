@@ -120,6 +120,7 @@ unsigned short readSNES(unsigned int *gpio)
 int getButton(unsigned int *gpio)
 {
 	//printf("Created by Nathanael Huh\n");
+    initializeGPIO(gpio);
 	unsigned short button;
 	while(1 == 1)	//Loops until start is pushed
 	{
