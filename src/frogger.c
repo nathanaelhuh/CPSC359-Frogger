@@ -178,8 +178,8 @@ struct GameState {
 };
 void initializeGame(struct GameState *game);
 void *gameMenu(void *param);
-void *playerInput(struct GameState *game);
-void *gameState(struct GameState *game);
+void *playerInput(void *param);
+void *gameState(void *param);
 void update(struct GameState *game);
 int collisionDetection(struct GameState *game);
 bool checkExit(struct GameState *game);
@@ -417,7 +417,7 @@ void *gamePlay()
 
 void *playerInput(void *param)
 {
-	struct GameState = &param;
+	struct GameState *game = param;
 	printf("\nInput");
 	while(true)
 	{
@@ -435,15 +435,15 @@ void *playerInput(void *param)
 				//Pause game
 			case 4:		//Up
 				//Move frog up
-				game->frog.y = game->frog.y + 1;
+				&game->frog.y = game->frog.y + 1;
 			case 5:		//Down
-				game->frog.y = game->frog.y - 1;
+				&game->frog.y = game->frog.y - 1;
 			case 6:		//Left
 				//Move frog left
-				game->frog.x = game->frog.x - 1;
+				&game->frog.x = game->frog.x - 1;
 			case 7:		//Right
 				//Move frog right
-				game->frog.x = game->frog.x + 1;
+				&game->frog.x = game->frog.x + 1;
 			case 8:		//A
 			{}
 			case 9:		//X
@@ -455,7 +455,7 @@ void *playerInput(void *param)
 			default:
 			{}
 		}
-		if(gameOver)
+		if(&game.gameOver)
 			pthread_exit(NULL);
 	}
 }
@@ -492,15 +492,15 @@ int collisionDetection(struct GameState *game)
 
 void *gameState(void *param)
 {
-	struct GameState game = &param;
+	struct GameState *game = param;
 	printf("\nGameState");
 	bool exit = false;
 	while(!exit)
 	{
-		update(game);
+		update(&game);
 		//Clear screen
 		//Draw
-		exit = checkExit(game);
+		exit = checkExit(&game);
 	}
 	pthread_exit(NULL);
 }
