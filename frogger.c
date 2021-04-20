@@ -6,44 +6,46 @@
 
 int gameMenu();
 void initializeGame();
+int *gameMenu(void *param);
+void *playerInput(void *param);
+void *gameState(void *param);
+void update();
+int collisionDetection();
+bool checkExit();
 
-// typedef struct Tile {
-// 	int x;
-// 	int y;
-// 	bool platform;
-// 	bool obstacle;
-// 	bool leftDirection;
-// }
+typedef struct Tile {
+	int x;
+	int y;
+}
 
 typedef struct Object {
 	int x;
 	int y;
-	int left;
-	int right;
-	int top;
-	int bottom;
-	int width;
 	bool isPlatform;
-	bool leftDirection;
+	int velocity;
 }
 
 typedef struct Stage {
-	Object objects[10];
+	struct Tile board[20][20];
+	struct Object objects[10];
+	bool isWater;
 
 }
 typedef struct GameState {
-	Stage stages[4];
+	struct Stage stages[4];
 }
 
 
 struct GameState game;
-
+struct Object frog;
 //Global variables
 int score;
 int extraLives;
 int secondsRemaining;
 int movesRemaining;
 clock_t startTime;
+
+int currentStage;
 
 int main(int argc, char **argv)
 {
@@ -54,7 +56,7 @@ int main(int argc, char **argv)
     pthread_create(&mainThread, &attr, gameMenu, "1");
 }
 
-int gameMenu();
+int *gameMenu(void *param)
 {
 	
 	//This is the main game menu that has start and quit
@@ -102,14 +104,6 @@ int gameMenu();
 	{
 		return 0
 	}
-
-	//IF left input then start is highlighted
-	//IF right input then quit is highlighted
-
-	//break when A is pressed or start is pressed
-	//if start is highlighted or start is pressed return 1
-	//else if quit is highlighted return 0
-	//else throw error
 }
 
 
@@ -121,32 +115,141 @@ void initializeGame()
 	secondsRemaining = 999;
 	movesRemaining = 200;
 
+	currentStage = 0;
+
+	frog.width = 32;
+	frog.x = 10;
+	frog.y = 0;
+
 	for(int i = 0; i < 4; i++)
 	{
+		int temp = -1;
 		for(int j = 0; j < 10; j++)
 		{
-			game.stages[i].objects[j].width = 32;
-			game.stages[i].objects[j].x1 = 0;
-			game.stages[i].objects[j].x2 = game.stages[i].objects[j].x1 + game.stages[i].objects[j].width;
-			game.stages[i].objects[j].y1 = 32*j;
-			game.stages[i].objects[j].y2 = 32*j + 32;
-			game.stages[i].objects[j].isPlatform = false;
-			game.stages[i].objects[j].leftDirection = j%2;
+			for(int a = 0; a < 20; a++)
+			{
+				for(int b = 0; b < 20; b++)
+				{
+					board[i][j].x = b;
+					board[i][j].y = a;
+				}
+			}
+			game.stages[i].objects[j].x = 0;
+			game.stages[i].objects[j].y = j;
+			game.stages[i].objects[j].velocity = temp;		//TODO: Might change object velocities later
 		}
+		temp = -temp;
+		game.stage[i].isWater = i%2;
 	}
 }
 
-void drawPixel(GameState *theGame)
-{
-	memcpy(theGame->framebuffer->fptr, theGame->stage, 1280*720*2);
-}
+// void drawPixel(GameState *theGame)
+// {
+// 	memcpy(theGame->framebuffer->fptr, theGame->stage, 1280*720*2);
+// }
 
 void gamePlay()
 {
 	initializeGame();
+
+	//Create threads for player input and game state
+	pthread_attr_t attr;
+
+	pthread_t inputThread
+	thread_attr_init(&attr);
+    pthread_create(&inputThread, &attr, playerInput, "1");
+	pthread_t gameStateThread
+	pthread_attr_t attr;
+	thread_attr_init(&attr);
+    pthread_create(&gameStateThread, &attr, gameState, "1");
 }
 
+void *playerInput(void *param)
+{
+	while(true)
+	{
+		int button = getButton()
+		switch(button)
+		{
+			case 0:		//B
+			case 1:		//Y
+			case 2:		//Select
+			case 3:		//Start
+				//Pause game
+			case 4:		//Up
+				//Move frog up
+				frog.y = frog.y + 1
+			case 5:		//Down
+				frog.y = frog.y - 1
+			case 6:		//Left
+				//Move frog left
+				frog.x = frog.x - 1
+			case 7:		//Right
+				//Move frog right
+				frog.x = frog.x + 1
+			case 8:		//A
+			case 9:		//X
+			case 10:	//Left bumper
+			case 11:	//Right bumper
+		}
+	
+	}
+}
 
+void update()
+{
+	int collide = collisionDetection();
+	if(collide != 0 && gameState.stages.isWater)
+	{
+		frog.x = frog.x + gameState.stages[currentStage].objects[collide].velocity;
+	}
+
+	for(int i = 0; i < 10; i++)
+	{
+		gameState.stages[currentStage].objects[collide].x = gameState.stages[currentStage].objects[collide].x + gameState.stages[currentStage].objects[collide].velocity;
+	}
+	if(frog.y >= 20)
+	{
+		currentStage = currentStage + 1;
+	}
+
+}
+
+int collisionDetection()
+{
+	for(int i = 0; i < 10; i++)
+	{
+		if(gameState.stages[currentStage].objects[i].x == frog.x && gameState.stages[currentStage].objects[i].y == frog.y)
+			return i;
+	}
+	return 0;
+}
+
+void *gameState(void *param)
+{
+	bool exit = false;
+	while(exit == false)
+	{
+		update();
+		//Clear screen
+		//Draw
+		exit = checkExit();
+	}
+}
+
+bool checkExit()
+{
+	if(currentStage == 3 && frog.y >= 20)
+	{
+		//WIN
+		return true;	
+	}
+	if(extraLives == 0 || movesRemaining == 0 || secondsRemaining == 0)
+	{
+		//LOSE
+		return true;
+	}
+}
 
 #include "initGPIO.h"
 
