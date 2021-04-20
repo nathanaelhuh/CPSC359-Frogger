@@ -404,19 +404,20 @@ void *gamePlay()
 			printf("ERROR creating thread, %d\n", tc);
 			exit(-1);
 	}
-	while(!gameOver)
+	while(!game.gameOver)
 	{
 		printf("\nPLAYING");
 	}
-	if(gameOver)
+	if(game.gameOver)
 	{
 			pthread_join(inputThread, NULL);
 			pthread_join(gameStateThread, NULL);
 	}
 }
 
-void *playerInput(struct GameState *game)
+void *playerInput(void *param)
 {
+	struct GameState = &param;
 	printf("\nInput");
 	while(true)
 	{
@@ -465,7 +466,7 @@ void update(struct GameState *game)
 	int collide = collisionDetection(&game);
 	if(collide != 0 && game->stages->isWater)
 	{
-		game.frog.x = game->frog.x + game->stages[currentStage].objects[collide].velocity;
+		game->frog.x = game->frog.x + game->stages[currentStage].objects[collide].velocity;
 	}
 
 	for(int i = 0; i < 10; i++)
@@ -489,16 +490,17 @@ int collisionDetection(struct GameState *game)
 	return 0;
 }
 
-void *gameState(struct GameState *game)
+void *gameState(void *param)
 {
+	struct GameState game = &param;
 	printf("\nGameState");
 	bool exit = false;
 	while(!exit)
 	{
-		update(&game);
+		update(game);
 		//Clear screen
 		//Draw
-		exit = checkExit(&game);
+		exit = checkExit(game);
 	}
 	pthread_exit(NULL);
 }
