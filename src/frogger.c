@@ -397,8 +397,8 @@ void *gamePlay(void *param)
 	{
 		printf("\nPLAYING");
 	}
-	pthread_join(inputThread, NULL);
-	pthread_join(gameStateThread, NULL);
+	// pthread_join(inputThread, NULL);
+	// pthread_join(gameStateThread, NULL);
 }
 
 void *playerInput(void *param)
@@ -490,8 +490,8 @@ void *playerInput(void *param)
 	// 		default:
 	// 		{}
 	// 	}
-		if(&game->gameOver)
-			pthread_exit(NULL);
+		// if(&game->gameOver)
+		// 	pthread_exit(NULL);
 	}
 }
 
@@ -537,7 +537,7 @@ void *gameState(void *param)
 		//Draw
 		exit = checkExit(game);
 	}
-	pthread_exit(NULL);
+	// pthread_exit(NULL);
 }
 
 bool checkExit(struct GameState *game)
