@@ -154,20 +154,20 @@ int *gameMenu(void *param)
 	bool startHighlighted = true;
 	while(start == false && quit == false)
 	{
-		int button = &getButton();
-		if(getButton == 6)	//Left
+		int button = getButton();
+		if(button == 6)	//Left
 		{
 			startHighlighted = true;
 		}
-		if(getButton == 7)	//Right
+		if(button == 7)	//Right
 		{
 			startHighlighted = false;
 		}
-		if(getButton == 3)	//Start
+		if(button == 3)	//Start
 		{
 			start = true;
 		}
-		if(getButton == 8)	//A
+		if(button == 8)	//A
 		{
 			if(startHighlighted)
 			{
