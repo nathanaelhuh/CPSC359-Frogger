@@ -407,7 +407,7 @@ void *gamePlay()
 			printf("ERROR creating thread, %d\n", tc);
 			exit(-1);
 	}
-
+	while(!gameOver);
 	if(gameOver)
 	{
 			pthread_join(inputThread, NULL);
