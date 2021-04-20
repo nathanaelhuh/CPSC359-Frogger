@@ -183,7 +183,7 @@ void *gameState(struct GameState *game);
 void update(struct GameState *game);
 int collisionDetection(struct GameState *game);
 bool checkExit(struct GameState *game);
-void *gamePlay(struct GameState *game);
+void *gamePlay();
 
 
 int currentStage;
@@ -341,16 +341,16 @@ int main(int argc, char **argv)
 void initializeGame(struct GameState *game)
 {
 	printf("\nInit game");
-	game.startTime = clock();
-	game.score = 0;
-	game.extraLives = 4;
-	game.secondsRemaining = 999;
-	game.movesRemaining = 200;
-	game.gameOver = false;
+	game->startTime = clock();
+	game->score = 0;
+	game->extraLives = 4;
+	game->secondsRemaining = 999;
+	game->movesRemaining = 200;
+	game->gameOver = false;
 	currentStage = 0;
 
-	frog.x = 10;
-	frog.y = 0;
+	game->frog.x = 10;
+	game->frog.y = 0;
 
 	for(int i = 0; i < 4; i++)
 	{
@@ -361,16 +361,16 @@ void initializeGame(struct GameState *game)
 			{
 				for(int b = 0; b < 20; b++)
 				{
-					game.stages[i].board[a][b].x = b;
-					game.stages[i].board[a][b].y = a;
+					game->stages[i].board[a][b].x = b;
+					game->stages[i].board[a][b].y = a;
 				}
 			}
-			game.stages[i].objects[j].x = 0;
-			game.stages[i].objects[j].y = j;
-			game.stages[i].objects[j].velocity = temp;		//TODO: Might change object velocities later
+			game->stages[i].objects[j].x = 0;
+			game->stages[i].objects[j].y = j;
+			game->stages[i].objects[j].velocity = temp;		//TODO: Might change object velocities later
 		}
 		temp = -temp;
-		game.stages[i].isWater = i%2;
+		game->stages[i].isWater = i%2;
 	}
 }
 
@@ -434,15 +434,15 @@ void *playerInput(struct GameState *game)
 				//Pause game
 			case 4:		//Up
 				//Move frog up
-				frog.y = frog.y + 1;
+				game->frog.y = game->frog.y + 1;
 			case 5:		//Down
-				frog.y = frog.y - 1;
+				game->frog.y = game->frog.y - 1;
 			case 6:		//Left
 				//Move frog left
-				frog.x = frog.x - 1;
+				game->frog.x = game->frog.x - 1;
 			case 7:		//Right
 				//Move frog right
-				frog.x = frog.x + 1;
+				game->frog.x = game->frog.x + 1;
 			case 8:		//A
 			{}
 			case 9:		//X
@@ -463,16 +463,16 @@ void update(struct GameState *game)
 {
 	printf("\nUpdate");
 	int collide = collisionDetection(&game);
-	if(collide != 0 && game.stages->isWater)
+	if(collide != 0 && game->stages->isWater)
 	{
-		game.frog.x = game.frog.x + game.stages[currentStage].objects[collide].velocity;
+		game.frog.x = game->frog.x + game->stages[currentStage].objects[collide].velocity;
 	}
 
 	for(int i = 0; i < 10; i++)
 	{
-		game.stages[currentStage].objects[collide].x = game.stages[currentStage].objects[collide].x + game.stages[currentStage].objects[collide].velocity;
+		game->stages[currentStage].objects[collide].x = game->stages[currentStage].objects[collide].x + game->stages[currentStage].objects[collide].velocity;
 	}
-	if(frog.y >= 20)
+	if(game->frog.y >= 20)
 	{
 		currentStage = currentStage + 1;
 	}
@@ -483,7 +483,7 @@ int collisionDetection(struct GameState *game)
 {
 	for(int i = 0; i < 10; i++)
 	{
-		if(game.stages[currentStage].objects[i].x == game.frog.x && game.stages[currentStage].objects[i].y == game.frog.y)
+		if(game->stages[currentStage].objects[i].x == game->frog.x && game->stages[currentStage].objects[i].y == game->frog.y)
 			return i;
 	}
 	return 0;
@@ -508,13 +508,13 @@ bool checkExit(struct GameState *game)
 	if(currentStage == 3 && game.frog.y >= 20)
 	{
 		//WIN
-		gameOver = true;
+		game.gameOver = true;
 		return true;
 	}
 	if(game.extraLives == 0 || game.movesRemaining == 0 || game.secondsRemaining == 0)
 	{
 		//LOSE
-		gameOver = true;
+		game.gameOver = true;
 		return true;
 	}
 	return false;
