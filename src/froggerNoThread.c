@@ -20,9 +20,6 @@
 #define INP_GPIO(g,p) *(g+((p)/10)) &= ~(7<<(((p)%10)*3))
 #define OUT_GPIO(g,p) *(g+((p)/10)) |= (1<<(((p)%10)*3))
 
-unsigned int *gpioPtr;
-
-
 //Initialized GPIO lines
 void initializeGPIO(unsigned int *gpio)
 {
@@ -189,7 +186,7 @@ int main(int argc, char **argv)
 {
 	printf("\nMain");
 	printf("\nGame menu");
-    *gpioPtr = getGPIOPtr();
+    unsigned int *gpioPtr = getGPIOPtr();
     initializeGPIO(gpioPtr);
 	//This is the main game menu that has start and quit
 	//Will have some sort of background and maybe animation?
