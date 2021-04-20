@@ -358,7 +358,7 @@ void update()
 {
 	printf("\nUpdate");
 	int collide = collisionDetection();
-	if(collide != 0 && game.stages.isWater)
+	if(collide != 0 && game.stages->isWater)
 	{
 		game.frog.x = game.frog.x + game.stages[currentStage].objects[collide].velocity;
 	}
