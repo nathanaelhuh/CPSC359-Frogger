@@ -13,28 +13,27 @@ void update();
 int collisionDetection();
 bool checkExit();
 
-typedef struct Tile {
+struct Tile {
 	int x;
 	int y;
-}
+};
 
-typedef struct Object {
+struct Object {
 	int x;
 	int y;
 	bool isPlatform;
 	int velocity;
-}
+};
 
-typedef struct Stage {
+struct Stage {
 	struct Tile board[20][20];
 	struct Object objects[10];
 	bool isWater;
 
-}
-typedef struct GameState {
+};
+struct GameState {
 	struct Stage stages[4];
-}
-
+};
 
 struct GameState game;
 struct Object frog;
@@ -50,9 +49,9 @@ int currentStage;
 int main(int argc, char **argv)
 {
 	//TODO: Check proper inputs??
-	pthread_t mainThread
+	pthread_t mainThread;
 	pthread_attr_t attr;
-	thread_attr_init(&attr);
+	pthread_attr_init(&attr);
     pthread_create(&mainThread, &attr, gameMenu, "1");
 }
 
@@ -67,7 +66,7 @@ int *gameMenu(void *param)
 	bool startHighlighted = true;
 	while(start == false && quit == false)
 	{
-		int button = getButton()
+		int button = getButton();
 		if(getButton == 6)	//Left
 		{
 			startHighlighted = true;
@@ -95,14 +94,14 @@ int *gameMenu(void *param)
 
 	if(start)
 	{
-		pthread_t gameThread
+		pthread_t gameThread;
 		pthread_attr_t attr;
-		thread_attr_init(&attr);
+		pthread_attr_init(&attr);
 		pthread_create(&gameThread, &attr, gamePlay, "1");
 	}
 	else
 	{
-		return 0
+		return 0;
 	}
 }
 
@@ -130,8 +129,8 @@ void initializeGame()
 			{
 				for(int b = 0; b < 20; b++)
 				{
-					board[i][j].x = b;
-					board[i][j].y = a;
+					game.stages[i].board[a][b].x = b;
+					game.stages[i].board[a][b].y = a;
 				}
 			}
 			game.stages[i].objects[j].x = 0;
@@ -155,12 +154,12 @@ void gamePlay()
 	//Create threads for player input and game state
 	pthread_attr_t attr;
 
-	pthread_t inputThread
-	thread_attr_init(&attr);
+	pthread_t inputThread;
+	pthread_attr_init(&attr);
     pthread_create(&inputThread, &attr, playerInput, "1");
-	pthread_t gameStateThread
-	pthread_attr_t attr;
-	thread_attr_init(&attr);
+
+	pthread_t gameStateThread;
+	pthread_attr_init(&attr);
     pthread_create(&gameStateThread, &attr, gameState, "1");
 }
 
@@ -199,14 +198,14 @@ void *playerInput(void *param)
 void update()
 {
 	int collide = collisionDetection();
-	if(collide != 0 && gameState.stages.isWater)
+	if(collide != 0 && game.stages.isWater)
 	{
-		frog.x = frog.x + gameState.stages[currentStage].objects[collide].velocity;
+		frog.x = frog.x + game.stages[currentStage].objects[collide].velocity;
 	}
 
 	for(int i = 0; i < 10; i++)
 	{
-		gameState.stages[currentStage].objects[collide].x = gameState.stages[currentStage].objects[collide].x + gameState.stages[currentStage].objects[collide].velocity;
+		game.stages[currentStage].objects[collide].x = game.stages[currentStage].objects[collide].x + game.stages[currentStage].objects[collide].velocity;
 	}
 	if(frog.y >= 20)
 	{
@@ -219,7 +218,7 @@ int collisionDetection()
 {
 	for(int i = 0; i < 10; i++)
 	{
-		if(gameState.stages[currentStage].objects[i].x == frog.x && gameState.stages[currentStage].objects[i].y == frog.y)
+		if(game.stages[currentStage].objects[i].x == frog.x && game.stages[currentStage].objects[i].y == frog.y)
 			return i;
 	}
 	return 0;
