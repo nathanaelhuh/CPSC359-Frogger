@@ -389,30 +389,16 @@ void *gamePlay(void *param)
 	pthread_attr_t attr;
 
 	pthread_t inputThread;
-	pthread_attr_init(&attr);
-    int tc = pthread_create(&inputThread, &attr, playerInput, &game);
-	if(tc)
-	{
-			printf("ERROR creating thread, %d\n", tc);
-			exit(-1);
-	}
-
 	pthread_t gameStateThread;
-    tc = pthread_create(&gameStateThread, &attr, gameState, &game);
-	if(tc)
-	{
-			printf("ERROR creating thread, %d\n", tc);
-			exit(-1);
-	}
+	pthread_attr_init(&attr);
+    pthread_create(&inputThread, &attr, playerInput, &game);
+	pthread_create(&gameStateThread, &attr, gameState, &game);
 	while(!game.gameOver)
 	{
 		printf("\nPLAYING");
 	}
-	if(game.gameOver)
-	{
-			pthread_join(inputThread, NULL);
-			pthread_join(gameStateThread, NULL);
-	}
+	pthread_join(inputThread, NULL);
+	pthread_join(gameStateThread, NULL);
 }
 
 void *playerInput(void *param)
