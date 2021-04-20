@@ -117,8 +117,8 @@ unsigned short readSNES(unsigned int *gpio)
 	return buttons;
 }
 
-//Main function
-int main()
+//Get button function
+int getButton()
 {
 	printf("Created by Nathanael Huh\n");
 
@@ -192,6 +192,7 @@ int currentStage;
 
 int main(int argc, char **argv)
 {
+	printf("\nMain");
 	//TODO: Check proper inputs??
 	pthread_t mainThread;
 	pthread_attr_t attr;
@@ -206,7 +207,7 @@ int main(int argc, char **argv)
 
 void *gameMenu(void *param)
 {
-	
+	printf("\nGame menu");
 	//This is the main game menu that has start and quit
 	//Will have some sort of background and maybe animation?
 	//Loop while waiting on input
@@ -262,6 +263,7 @@ void *gameMenu(void *param)
 
 void initializeGame()
 {
+	printf("\nInit game");
 	startTime = clock();
 	score = 0;
 	extraLives = 4;
