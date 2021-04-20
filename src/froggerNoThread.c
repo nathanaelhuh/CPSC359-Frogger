@@ -21,6 +21,9 @@
 #define OUT_GPIO(g,p) *(g+((p)/10)) |= (1<<(((p)%10)*3))
 
 
+unsigned int *gpioPtr = getGPIOPtr();
+
+
 //Initialized GPIO lines
 void initializeGPIO(unsigned int *gpio)
 {
@@ -185,7 +188,6 @@ void gamePlay();
 struct GameState game;
 int currentStage;
 
-unsigned int *gpioPtr = getGPIOPtr();
 
 int main(int argc, char **argv)
 {
