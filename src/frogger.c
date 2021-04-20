@@ -194,19 +194,15 @@ int main(int argc, char **argv)
 {
 	printf("\nMain");
 	//TODO: Check proper inputs??
-	pthread_t mainThread;
-	pthread_attr_t attr;
-	pthread_attr_init(&attr);
-    int tc = pthread_create(&mainThread, &attr, gameMenu, "1");
-	if(tc)
-	{
-			printf("ERROR creating thread, %d\n", tc);
-			exit(-1);
-	}
-}
-
-void *gameMenu(void *param)
-{
+	// pthread_t mainThread;
+	// pthread_attr_t attr;
+	// pthread_attr_init(&attr);
+    // int tc = pthread_create(&mainThread, &attr, gameMenu, "1");
+	// if(tc)
+	// {
+	// 		printf("ERROR creating thread, %d\n", tc);
+	// 		exit(-1);
+	// }
 	printf("\nGame menu");
 	//This is the main game menu that has start and quit
 	//Will have some sort of background and maybe animation?
@@ -273,6 +269,75 @@ void *gameMenu(void *param)
 		printf("QUIT");
 	}
 }
+
+// void *gameMenu(void *param)
+// {
+// 	printf("\nGame menu");
+// 	//This is the main game menu that has start and quit
+// 	//Will have some sort of background and maybe animation?
+// 	//Loop while waiting on input
+// 	bool start = false;
+// 	bool quit = false;
+// 	bool startHighlighted = true;
+// 	unsigned int *gpioPtr = getGPIOPtr();
+// 	initializeGPIO(gpioPtr);
+// 	unsigned short button;
+// 	while(start == false && quit == false)	//Loops until start is pushed
+// 	{
+// 		unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
+// 		for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
+// 		{
+// 			int value = (code >> i) & 1;	//Gets bit of in i position
+// 			if(value == 0)	//If button is pushed
+// 			{
+// 				button = i;	//Sets button pushed to index for printing
+// 				printMessage(button);	//Prints button pushed
+// 				if(button == 6)	//Left
+// 				{
+// 					startHighlighted = true;
+// 				}
+// 				if(button == 7)	//Right
+// 				{
+// 					startHighlighted = false;
+// 				}
+// 				if(button == 3)	//Start
+// 				{
+// 					start = true;
+// 				}
+// 				if(button == 8)	//A
+// 				{
+// 					if(startHighlighted)
+// 					{
+// 						start = true;
+// 					}
+// 					else
+// 					{
+// 						quit = true;
+// 					}
+// 				}
+// 			}
+// 		}
+// 		printf("\n");	//New line for nicer organization
+// 		delayMicroseconds(100000);	//Pauses program to delay input (avoids spamming)
+// 	}
+
+// 	if(start)
+// 	{
+// 		pthread_t gameThread;
+// 		pthread_attr_t attr;
+// 		pthread_attr_init(&attr);
+// 		int tc = pthread_create(&gameThread, &attr, gamePlay, "1");
+// 		if(tc)
+// 		{
+// 				printf("ERROR creating thread, %d\n", tc);
+// 				exit(-1);
+// 		}
+// 	}
+// 	else
+// 	{
+// 		printf("QUIT");
+// 	}
+// }
 
 
 void initializeGame()
