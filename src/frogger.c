@@ -18,12 +18,21 @@
 #define INP_GPIO(g,p) *(g+((p)/10)) &= ~(7<<(((p)%10)*3))
 #define OUT_GPIO(g,p) *(g+((p)/10)) |= (1<<(((p)%10)*3))
 
-void initGPIO(unsigned int *gpio)
+// void initGPIO(unsigned int *gpio)
+// {
+//     INP_GPIO(gpio, CLK);
+//     OUT_GPIO(gpio, CLK);
+//     INP_GPIO(gpio, LAT);
+//     OUT_GPIO(gpio, LAT);
+// }
+
+void initializeGPIO(unsigned int *gpio)
 {
-    INP_GPIO(gpio, CLK);
-    OUT_GPIO(gpio, CLK);
-    INP_GPIO(gpio, LAT);
-    OUT_GPIO(gpio, LAT);
+	INP_GPIO(gpio, CLK);
+	OUT_GPIO(gpio, CLK);
+	INP_GPIO(gpio, LAT);
+	OUT_GPIO(gpio, LAT);
+	INP_GPIO(gpio, DAT);
 }
 
 void writeLatch(int bit, unsigned int *gpio) 
@@ -78,7 +87,7 @@ int readSNES(unsigned int *gpio)
 int getButton()
 {
         unsigned int *gpioPtr = getGPIOPtr();
-        initGPIO(gpioPtr);
+        initializeGPIO(gpioPtr);
         writeLatch(1, gpioPtr);
         delayMicroseconds(12);
         writeLatch(0, gpioPtr);
