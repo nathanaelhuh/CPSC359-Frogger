@@ -297,8 +297,6 @@ void gamePlay()
 	initializeGame();
     gameState();
 
-	// pthread_join(inputThread, NULL);
-	// pthread_join(gameStateThread, NULL);
 }
 
 void playerInput()
@@ -351,6 +349,7 @@ void playerInput()
 				}
 			}
 		}
+		delayMicroseconds(100000);
 	}
 }
 
@@ -370,6 +369,7 @@ void update()
 	if(game.frog.y >= 20)
 	{
 		currentStage = currentStage + 1;
+        printf("\nGoing up a stage");
 	}
 }
 
@@ -394,7 +394,6 @@ void gameState()
 		//Clear screen
 		//Draw
 		exit = checkExit();
-		delayMicroseconds(100000);
 	}
 }
 
@@ -403,12 +402,14 @@ bool checkExit()
 	if(currentStage == 3 && game.frog.y >= 20)
 	{
 		//WIN
+        printf("\nCongrats you have won");
 		game.gameOver = true;
 		return true;
 	}
 	if(game.extraLives == 0 || game.movesRemaining == 0 || game.secondsRemaining == 0)
 	{
 		//LOSE
+        printf("\nSorry you lose");
 		game.gameOver = true;
 		return true;
 	}
