@@ -177,17 +177,15 @@ struct Stage {
 };
 struct GameState {
 	struct Stage stages[4];
+	int score;
+	int extraLives;
+	int secondsRemaining;
+	int movesRemaining;
+	clock_t startTime;
+	bool gameOver;
 };
-
-struct GameState game;
-struct Object frog;
 //Global variables
-int score;
-int extraLives;
-int secondsRemaining;
-int movesRemaining;
-clock_t startTime;
-bool gameOver;
+
 
 int currentStage;
 
@@ -341,15 +339,15 @@ int main(int argc, char **argv)
 // }
 
 
-void initializeGame()
+void initializeGame(GameState game)
 {
 	printf("\nInit game");
-	startTime = clock();
-	score = 0;
-	extraLives = 4;
-	secondsRemaining = 999;
-	movesRemaining = 200;
-	gameOver = false;
+	game.startTime = clock();
+	game.score = 0;
+	game.extraLives = 4;
+	game.secondsRemaining = 999;
+	game.movesRemaining = 200;
+	game.gameOver = false;
 	currentStage = 0;
 
 	frog.x = 10;
@@ -385,7 +383,9 @@ void initializeGame()
 void *gamePlay()
 {
 	printf("\nGamePlay");
-	initializeGame();
+	struct GameState game;
+	struct Object frog;
+	initializeGame(&game);
 
 	//Create threads for player input and game state
 	pthread_attr_t attr;
