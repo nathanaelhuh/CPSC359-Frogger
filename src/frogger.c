@@ -407,6 +407,12 @@ void *gamePlay()
 			printf("ERROR creating thread, %d\n", tc);
 			exit(-1);
 	}
+
+	if(gameOver)
+	{
+			pthread_join(inputThread, NULL);
+			pthread_join(gameStateThread, NULL);
+	}
 }
 
 void *playerInput(void *param)
@@ -447,10 +453,8 @@ void *playerInput(void *param)
 			default:
 			{}
 		}
-
 		if(gameOver)
 			pthread_exit(NULL);
-	
 	}
 }
 
@@ -502,11 +506,14 @@ bool checkExit()
 	if(currentStage == 3 && frog.y >= 20)
 	{
 		//WIN
-		return true;	
+		gameOver = true;
+		return true;
 	}
 	if(extraLives == 0 || movesRemaining == 0 || secondsRemaining == 0)
 	{
 		//LOSE
+		gameOver = true;
 		return true;
 	}
+	return false;
 }
