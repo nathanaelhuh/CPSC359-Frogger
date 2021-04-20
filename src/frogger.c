@@ -147,16 +147,6 @@ int getButton()
 }
 
 
-
-void initializeGame();
-void *gameMenu(void *param);
-void *playerInput(void *param);
-void *gameState(void *param);
-void update();
-int collisionDetection();
-bool checkExit();
-void *gamePlay();
-
 struct Tile {
 	int x;
 	int y;
@@ -183,8 +173,18 @@ struct GameState {
 	int movesRemaining;
 	clock_t startTime;
 	bool gameOver;
+	
+	struct Object frog;
 };
-//Global variables
+
+void initializeGame(GameState game);
+void *gameMenu(void *param);
+void *playerInput(GameState game);
+void *gameState(GameState game);
+void update();
+int collisionDetection();
+bool checkExit();
+void *gamePlay();
 
 
 int currentStage;
@@ -384,7 +384,6 @@ void *gamePlay()
 {
 	printf("\nGamePlay");
 	struct GameState game;
-	struct Object frog;
 	initializeGame(&game);
 
 	//Create threads for player input and game state
@@ -392,7 +391,7 @@ void *gamePlay()
 
 	pthread_t inputThread;
 	pthread_attr_init(&attr);
-    int tc = pthread_create(&inputThread, &attr, playerInput, "1");
+    int tc = pthread_create(&inputThread, &attr, playerInput, &game);
 	if(tc)
 	{
 			printf("ERROR creating thread, %d\n", tc);
@@ -400,7 +399,7 @@ void *gamePlay()
 	}
 
 	pthread_t gameStateThread;
-    tc = pthread_create(&gameStateThread, &attr, gameState, "1");
+    tc = pthread_create(&gameStateThread, &attr, gameState, &game);
 	if(tc)
 	{
 			printf("ERROR creating thread, %d\n", tc);
@@ -417,7 +416,7 @@ void *gamePlay()
 	}
 }
 
-void *playerInput(void *param)
+void *playerInput(GameState game)
 {
 	printf("\nInput");
 	while(true)
@@ -461,13 +460,13 @@ void *playerInput(void *param)
 	}
 }
 
-void update()
+void update(GameStage game)
 {
 	printf("\nUpdate");
-	int collide = collisionDetection();
+	int collide = collisionDetection(&game);
 	if(collide != 0 && game.stages->isWater)
 	{
-		frog.x = frog.x + game.stages[currentStage].objects[collide].velocity;
+		game.frog.x = game.frog.x + game.stages[currentStage].objects[collide].velocity;
 	}
 
 	for(int i = 0; i < 10; i++)
@@ -481,33 +480,33 @@ void update()
 
 }
 
-int collisionDetection()
+int collisionDetection(GameState game)
 {
 	for(int i = 0; i < 10; i++)
 	{
-		if(game.stages[currentStage].objects[i].x == frog.x && game.stages[currentStage].objects[i].y == frog.y)
+		if(game.stages[currentStage].objects[i].x == game.frog.x && game.stages[currentStage].objects[i].y == game.frog.y)
 			return i;
 	}
 	return 0;
 }
 
-void *gameState(void *param)
+void *gameState(GameState game)
 {
 	printf("\nGameState");
 	bool exit = false;
 	while(!exit)
 	{
-		update();
+		update(&game);
 		//Clear screen
 		//Draw
-		exit = checkExit();
+		exit = checkExit(&game);
 	}
 	pthread_exit(NULL);
 }
 
-bool checkExit()
+bool checkExit(GameState game)
 {
-	if(currentStage == 3 && frog.y >= 20)
+	if(currentStage == 3 && game.frog.y >= 20)
 	{
 		//WIN
 		gameOver = true;
