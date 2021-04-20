@@ -410,6 +410,7 @@ void *playerInput(void *param)
 	unsigned short button;
 	while(true)	//Loops until start is pushed
 	{
+		delayMicroseconds(100000);
 		unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
 		for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
 		{
@@ -453,7 +454,7 @@ void *playerInput(void *param)
 			}
 		}
 		printf("\n");	//New line for nicer organization
-		delayMicroseconds(100000);	//Pauses program to delay input (avoids spamming)
+		//delayMicroseconds(100000);	//Pauses program to delay input (avoids spamming)
 	// while(true)
 	// {
 	// 	int button = getButton();
@@ -536,6 +537,7 @@ void *gameState(void *param)
 		//Clear screen
 		//Draw
 		exit = checkExit(game);
+		delayMicroseconds(100000);
 	}
 	// pthread_exit(NULL);
 }
