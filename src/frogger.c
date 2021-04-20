@@ -99,7 +99,7 @@ void *gameState(void *param);
 void update();
 int collisionDetection();
 bool checkExit();
-void gamePlay();
+void *gamePlay();
 
 struct Tile {
 	int x;
@@ -154,7 +154,7 @@ int *gameMenu(void *param)
 	bool startHighlighted = true;
 	while(start == false && quit == false)
 	{
-		int button = getButton();
+		int button = &getButton();
 		if(getButton == 6)	//Left
 		{
 			startHighlighted = true;
@@ -234,7 +234,7 @@ void initializeGame()
 // 	memcpy(theGame->framebuffer->fptr, theGame->stage, 1280*720*2);
 // }
 
-void gamePlay()
+void *gamePlay()
 {
 	initializeGame();
 
@@ -258,8 +258,11 @@ void *playerInput(void *param)
 		switch(button)
 		{
 			case 0:		//B
+			{}
 			case 1:		//Y
+			{}
 			case 2:		//Select
+			{}
 			case 3:		//Start
 				//Pause game
 			case 4:		//Up
@@ -274,9 +277,15 @@ void *playerInput(void *param)
 				//Move frog right
 				frog.x = frog.x + 1;
 			case 8:		//A
+			{}
 			case 9:		//X
+			{}
 			case 10:	//Left bumper
+			{}
 			case 11:	//Right bumper
+			{}
+			default:
+			{}
 		}
 	
 	}
