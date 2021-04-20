@@ -176,15 +176,14 @@ struct GameState {
 	
 	struct Object frog;
 };
-
-void initializeGame(GameState game);
+void initializeGame(struct GameState game);
 void *gameMenu(void *param);
-void *playerInput(GameState game);
-void *gameState(GameState game);
-void update();
-int collisionDetection();
-bool checkExit();
-void *gamePlay();
+void *playerInput(struct GameState game);
+void *gameState(struct GameState game);
+void update(struct GameState game);
+int collisionDetection(struct GameState game);
+bool checkExit(struct GameState game);
+void *gamePlay(struct GameState game);
 
 
 int currentStage;
@@ -339,7 +338,7 @@ int main(int argc, char **argv)
 // }
 
 
-void initializeGame(GameState game)
+void initializeGame(struct GameState game)
 {
 	printf("\nInit game");
 	game.startTime = clock();
@@ -416,7 +415,7 @@ void *gamePlay()
 	}
 }
 
-void *playerInput(GameState game)
+void *playerInput(struct GameState game)
 {
 	printf("\nInput");
 	while(true)
@@ -460,7 +459,7 @@ void *playerInput(GameState game)
 	}
 }
 
-void update(GameStage game)
+void update(struct GameState game)
 {
 	printf("\nUpdate");
 	int collide = collisionDetection(&game);
@@ -480,7 +479,7 @@ void update(GameStage game)
 
 }
 
-int collisionDetection(GameState game)
+int collisionDetection(struct GameState game)
 {
 	for(int i = 0; i < 10; i++)
 	{
@@ -490,7 +489,7 @@ int collisionDetection(GameState game)
 	return 0;
 }
 
-void *gameState(GameState game)
+void *gameState(struct GameState game)
 {
 	printf("\nGameState");
 	bool exit = false;
@@ -504,7 +503,7 @@ void *gameState(GameState game)
 	pthread_exit(NULL);
 }
 
-bool checkExit(GameState game)
+bool checkExit(struct GameState game)
 {
 	if(currentStage == 3 && game.frog.y >= 20)
 	{
