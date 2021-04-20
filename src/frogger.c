@@ -1,9 +1,11 @@
-#include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 #include <time.h>
 #include <pthread.h>
-
+#include <unistd.h>
+#include <stdio.h>
+#include <fcntl.h>
+#include <sys/mman.h>
 #include "initGPIO.h"
 
 #define GPSEL0 0
@@ -18,87 +20,132 @@
 #define INP_GPIO(g,p) *(g+((p)/10)) &= ~(7<<(((p)%10)*3))
 #define OUT_GPIO(g,p) *(g+((p)/10)) |= (1<<(((p)%10)*3))
 
-// void initGPIO(unsigned int *gpio)
-// {
-//     INP_GPIO(gpio, CLK);
-//     OUT_GPIO(gpio, CLK);
-//     INP_GPIO(gpio, LAT);
-//     OUT_GPIO(gpio, LAT);
-// }
 
+//Initialized GPIO lines
 void initializeGPIO(unsigned int *gpio)
 {
-	INP_GPIO(gpio, CLK);
-	OUT_GPIO(gpio, CLK);
-	INP_GPIO(gpio, LAT);
-	OUT_GPIO(gpio, LAT);
+    	INP_GPIO(gpio, CLK);
+    	OUT_GPIO(gpio, CLK);
+    	INP_GPIO(gpio, LAT);
+    	OUT_GPIO(gpio, LAT);
 	INP_GPIO(gpio, DAT);
 }
 
-void writeLatch(int bit, unsigned int *gpio) 
+//Function for writing to latch
+void writeLatch(int bit, unsigned int *gpio)
 {
-    if(bit == 0)
-    {
-        gpio[GPCLR0] = 1 << LAT;
-    }
-    else if(bit == 1)
-    {
-        gpio[GPSET0] = 1 << LAT;
-    }
+	if(bit == 0)
+    	{
+       		gpio[GPCLR0] = 1 << LAT;	//Sets latch bit to 0
+    	}
+    	else if(bit == 1)
+    	{
+        	gpio[GPSET0] = 1 << LAT;	//Sets latch bit to 1
+    	}
 }
+
+//Function for writing to clock
 void writeClock(int bit, unsigned int *gpio)
 {
-    if(bit == 0)
-    {
-        gpio[GPCLR0] = 1 << CLK;
-    }
-    else if(bit == 1)
-    {
-        gpio[GPSET0] = 1 << CLK;
-    }
+    	if(bit == 0)
+    	{
+        	gpio[GPCLR0] = 1 << CLK;	//Sets clock bit to 0
+    	}
+    	else if(bit == 1)
+    	{
+        	gpio[GPSET0] = 1 << CLK;	//Sets clock bit to 1
+    	}
 }
+
+//Function for reading from data line
 int readData(unsigned int *gpio)
 {
-    return (gpio[GPLEV0] >> 10) & 1;
+    	return (gpio[GPLEV0] >> DAT) & 1;	//Reads bit from data line
 }
 
-int readSNES(unsigned int *gpio)
+//Function for printing which buttons are pressed
+void printMessage(unsigned short code)
 {
-    while(true)
-    {
-        int counter = 0;
-        while(counter < 16)
-        {
-                delayMicroseconds(6);
-                writeClock(0, gpio);
-                delayMicroseconds(6);
-                int value = readData(gpio);
-                if(value == 0)
-                {
-                        return counter;
-                }
-                gpio[GPSET0] = 1 << 11;
+	//2D char array for names of each button pushed, max size 13 based on string size
+    	char buttonB[13] = "B";
+    	char buttonY[13] = "Y";
+    	char buttonSelect[13] = "Select";
+    	char buttonStart[13] = "Start";
+    	char buttonJpUp[13] = "Joy-pad UP";
+    	char buttonJpDown[13] = "Joy-pad DOWN";
+    	char buttonJpLeft[13] = "Joy-pad LEFT";
+    	char buttonJpRight[13] = "Joy-pad RIGHT";
+    	char buttonA[13] = "A";
+    	char buttonX[13] = "X";
+    	char buttonLeft[13] = "Left";
+    	char buttonRight[13] = "Right";
 
-                counter++;
-        }
-    }
+    	char* buttonList[12] = {buttonB, buttonY, buttonSelect, buttonStart, buttonJpUp, buttonJpDown, buttonJpLeft, buttonJpRight, buttonA, buttonX, buttonLeft, buttonRight};
+  	printf("You have pressed %s\n", buttonList[code]);
 }
 
-int getButton()
+//Function to read SNES buttons pushed
+unsigned short readSNES(unsigned int *gpio)
 {
+	unsigned short buttons = 0b1111111111111111;	//Initialized variable for buttons pushed
+   	while(buttons == 0b1111111111111111)		//While loop while buttons aren't pushed
+    	{
+        	int counter = 0;	//Counter
+
+		writeClock(1, gpio);		//Setup of SNES lines
+		writeLatch(1, gpio);
+		delayMicroseconds(12);
+		writeLatch(0, gpio);
+
+        	while(counter < 16)	//Loop to iterate through data line
+        	{
+                	delayMicroseconds(6);
+                	writeClock(0, gpio);
+                	delayMicroseconds(6);
+                	int value = readData(gpio);	//Gets data line bit value
+                	if(value == 0)
+                	{
+				//Adds bit to buttons pushed variable
+                        	unsigned short temp = ~(1 << counter);
+				buttons &= temp;
+                	}
+                	writeClock(1, gpio);	//Writes 1 to clock
+
+          	      	counter++;	//Iterates counter
+        	}
+    	}
+	return buttons;
+}
+
+//Main function
+int main()
+{
+	printf("Created by Nathanael Huh\n");
+
         unsigned int *gpioPtr = getGPIOPtr();
         initializeGPIO(gpioPtr);
-        writeLatch(1, gpioPtr);
-        delayMicroseconds(12);
-        writeLatch(0, gpioPtr);
-        int button;
-        while(true)
+        unsigned short button;
+        while(true)	//Loops until start is pushed
         {
-            printf("Please press a button\n");
-            button = readSNES(gpioPtr);
-            return button;
+            	printf("Please press a button\n");
+            	unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
+			for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
+			{
+				int value = (code >> i) & 1;	//Gets bit of in i position
+				if(value == 0)	//If button is pushed
+				{
+					button = i;	//Sets button pushed to index for printing
+						//printMessage(button);	//Prints button pushed
+						return button;
+					if(button == 3)
+						break;	//Breaks out of loop if start is pressed
+				}
+			}
+			printf("\n");	//New line for nicer organization
+			delayMicroseconds(100000);	//Pauses program to delay input (avoids spamming)
         }
 }
+
 
 
 void initializeGame();
