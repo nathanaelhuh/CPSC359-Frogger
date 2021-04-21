@@ -408,7 +408,7 @@ void update()
 	//printf("\nUpdate");
 	printf("\nFrog y: %i Frog x: %i", game.frog.y, game.frog.x);
 	clock_t currentTime = clock();
-	int timePassed = currentTime - game.startTime;
+	int timePassed = (currentTime - game.startTime) / CLOCKS_PER_SEC;
 	game.secondsRemaining = 999 - timePassed;
 
 	printf("\n\nData\nTime remaining: %i\nLives: %i\nMoves: %i\n", game.secondsRemaining, game.extraLives, game.movesRemaining);
