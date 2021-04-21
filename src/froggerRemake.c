@@ -401,7 +401,7 @@ void gamePlay()
 void update()
 {
 	//printf("\nUpdate");
-	printf("\nFrog y: %i", game.frog.y);
+	printf("\nFrog y: %i Frog x: %i", game.frog.y, game.frog.x);
 	int collide = collisionDetection();
 	if(collide != 0 && game.stages->isWater)
 	{
@@ -415,6 +415,7 @@ void update()
 	if(game.frog.y >= 20)
 	{
 		currentStage = currentStage + 1;
+		game.frog.y = 0;
         printf("\nGoing up a stage");
 	}
 }
