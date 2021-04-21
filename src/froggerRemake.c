@@ -176,6 +176,7 @@ void update();
 int collisionDetection();
 bool checkExit();
 void *playerInput(void *params);
+void gamePlay();
 
 struct GameState game;
 int currentStage;
@@ -202,121 +203,128 @@ int main(int argc, char **argv)
 
 void *playerInput(void *params)
 {
-
-	initializeGPIO(gpio);
+	unsigned int *gpioPtr = getGPIOPtr();
+	initializeGPIO(gpioPtr);
 	unsigned short button;
+	bool quit = false;
+	bool startHighlighted = true;
 	//LOOP for menu selection
-	while(!gameStart)
+	while(!quit)
 	{
-		printf("Please press a button\n");
-		unsigned short code = readSNES(gpio);	//Gets series of bits for buttons pushed
-		for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
+		while(!gameStart)
 		{
-			int value = (code >> i) & 1;	//Gets bit of in i position
-			if(value == 0)	//If button is pushed
+			printf("Please press a button\n");
+			unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
+			for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
 			{
-				button = i;	//Sets button pushed to index for printing
-                printMessage(button);	//Prints button pushed
-                if(button == 6)	//Left
+				int value = (code >> i) & 1;	//Gets bit of in i position
+				if(value == 0)	//If button is pushed
 				{
-					startHighlighted = true;
-				}
-				if(button == 7)	//Right
-				{
-					startHighlighted = false;
-				}
-				if(button == 3)	//Start
-				{
-					start = true;
-				}
-				if(button == 8)	//A
-				{
-					if(startHighlighted)
+					button = i;	//Sets button pushed to index for printing
+					printMessage(button);	//Prints button pushed
+					if(button == 6)	//Left
+					{
+						startHighlighted = true;
+					}
+					if(button == 7)	//Right
+					{
+						startHighlighted = false;
+					}
+					if(button == 3)	//Start
 					{
 						gameStart = true;
 					}
-					else
+					if(button == 8)	//A
 					{
-						pthread_exit(NULL);
+						if(startHighlighted)
+						{
+							gameStart = true;
+						}
+						else
+						{
+							quit = true;
+						}
+					}
+				}
+			}
+		}
+		while(gameStart && !paused)
+		{
+			printf("Please press a button\n");
+			unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
+			for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
+			{
+				int value = (code >> i) & 1;	//Gets bit of in i position
+				if(value == 0)	//If button is pushed
+				{
+					button = i;	//Sets button pushed to index for printing
+					printMessage(button);	//Prints button pushed
+					switch(button)
+					{
+						case 3:		//Start
+							//Pause game
+							paused = true;
+						case 4:		//Up
+							//Move frog up
+							game.frog.y = game.frog.y + 1;
+						case 5:		//Down
+							game.frog.y = game.frog.y - 1;
+						case 6:		//Left
+							//Move frog left
+							game.frog.x = game.frog.x - 1;
+						case 7:		//Right
+							//Move frog right
+							game.frog.x = game.frog.x + 1;
+						default:
+						{}
+					}
+				}
+			}
+		}
+		while(paused)
+		{	
+			//TODO: NEEDS SOME SORT OF PAUSE MENU SELECTION
+			printf("Please press a button\n");
+			unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
+			for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
+			{
+				int value = (code >> i) & 1;	//Gets bit of in i position
+				if(value == 0)	//If button is pushed
+				{
+					button = i;	//Sets button pushed to index for printing
+					printMessage(button);	//Prints button pushed
+					switch(button)
+					{
+						case 0:		//B
+						{}
+						case 1:		//Y
+						{}
+						case 2:		//Select
+						{}
+						case 3:		//Start
+							//Unpause game
+							paused = false;
+						case 4:		//Up
+
+						case 5:		//Down
+						case 6:		//Left
+						case 7:		//Right
+						case 8:		//A
+						{}
+						case 9:		//X
+						{}
+						case 10:	//Left bumper
+						{}
+						case 11:	//Right bumper
+						{}
+						default:
+						{}
 					}
 				}
 			}
 		}
 	}
-	while(gameStart && !paused)
-	{
-		printf("Please press a button\n");
-		unsigned short code = readSNES(gpio);	//Gets series of bits for buttons pushed
-		for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
-		{
-			int value = (code >> i) & 1;	//Gets bit of in i position
-			if(value == 0)	//If button is pushed
-			{
-				button = i;	//Sets button pushed to index for printing
-                printMessage(button);	//Prints button pushed
-                switch(button)
-				{
-					case 3:		//Start
-						//Pause game
-					case 4:		//Up
-						//Move frog up
-						game.frog.y = game.frog.y + 1;
-					case 5:		//Down
-						game.frog.y = game.frog.y - 1;
-					case 6:		//Left
-						//Move frog left
-						game.frog.x = game.frog.x - 1;
-					case 7:		//Right
-						//Move frog right
-						game.frog.x = game.frog.x + 1;
-					default:
-					{}
-				}
-			}
-		}
-	}
-	while(paused)
-	{	
-		//TODO: NEEDS SOME SORT OF PAUSE MENU SELECTION
-		printf("Please press a button\n");
-		unsigned short code = readSNES(gpio);	//Gets series of bits for buttons pushed
-		for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
-		{
-			int value = (code >> i) & 1;	//Gets bit of in i position
-			if(value == 0)	//If button is pushed
-			{
-				button = i;	//Sets button pushed to index for printing
-                printMessage(button);	//Prints button pushed
-                switch(button)
-				{
-					case 0:		//B
-					{}
-					case 1:		//Y
-					{}
-					case 2:		//Select
-					{}
-					case 3:		//Start
-						//Unpause game
-						pause = false;
-					case 4:		//Up
-
-					case 5:		//Down
-					case 6:		//Left
-					case 7:		//Right
-					case 8:		//A
-					{}
-					case 9:		//X
-					{}
-					case 10:	//Left bumper
-					{}
-					case 11:	//Right bumper
-					{}
-					default:
-					{}
-				}
-			}
-		}
-	}
+	pthread_exit(NULL);
 }
 
 void initializeGame()
@@ -355,10 +363,11 @@ void initializeGame()
 	}
 }
 
-void gamePlay(unsigned int *gpio)
+void gamePlay()
 {
 	printf("\nGamePlay");
 	initializeGame();
+	bool exit = false;
 	while(!exit)
 	{
 		update();
