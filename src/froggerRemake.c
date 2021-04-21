@@ -177,6 +177,7 @@ int collisionDetection();
 bool checkExit();
 void *playerInput(void *params);
 void gamePlay();
+void *counter(void *params);
 
 struct GameState game;
 int currentStage;
@@ -247,7 +248,7 @@ void *playerInput(void *params)
 					}
 				}
 			}
-			delayMicroseconds(100000);
+			delayMicroseconds(1000000);
 		}
 		while(gameStart && !paused)
 		{
@@ -270,27 +271,31 @@ void *playerInput(void *params)
 							//Move frog up
 							printf("\nFrog going up");
 							game.frog.y = game.frog.y + 1;
+							game.movesRemaining = game.movesRemaining - 1;
 							break;
 						case 5:		//Down
 							printf("\nFrog going down");
 							game.frog.y = game.frog.y - 1;
+							game.movesRemaining = game.movesRemaining - 1;
 							break;
 						case 6:		//Left
 							//Move frog left
 							printf("\nFrog going left");
 							game.frog.x = game.frog.x - 1;
+							game.movesRemaining = game.movesRemaining - 1;
 							break;
 						case 7:		//Right
 							//Move frog right
 							printf("\nFrog going right");
 							game.frog.x = game.frog.x + 1;
+							game.movesRemaining = game.movesRemaining - 1;
 							break;
 						default:
 							break;
 					}
 				}
 			}
-			delayMicroseconds(100000);
+			delayMicroseconds(1000000);
 		}
 		while(paused)
 		{	
@@ -338,7 +343,7 @@ void *playerInput(void *params)
 				}
 			}
 			printf("\nPAUSED");
-			delayMicroseconds(100000);
+			delayMicroseconds(1000000);
 		}
 	}
 	pthread_exit(NULL);
@@ -402,6 +407,12 @@ void update()
 {
 	//printf("\nUpdate");
 	printf("\nFrog y: %i Frog x: %i", game.frog.y, game.frog.x);
+	clock_t currentTime = clock();
+	int timePassed = startTime - currentTime;
+	game.secondsRemaining = 999 - timePassed;
+
+	printf("\n\nData\nTime remaining: %i\nLives: %i\nMoves: %i\n", game.secondsRemaining, game.extraLives, game.movesRemaining);
+
 	int collide = collisionDetection();
 	if(collide != 0 && game.stages->isWater)
 	{
@@ -411,6 +422,10 @@ void update()
 	for(int i = 0; i < 10; i++)
 	{
 		game.stages[currentStage].objects[collide].x = game.stages[currentStage].objects[collide].x + game.stages[currentStage].objects[collide].velocity;
+	}
+	if(game.frog.x < 0 || game.frog.x > 20 || game.frog.y < 0)
+	{
+		game.extraLives = game.extraLives - 1;
 	}
 	if(game.frog.y >= 20)
 	{
