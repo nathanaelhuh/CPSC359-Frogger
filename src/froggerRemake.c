@@ -370,10 +370,13 @@ void gamePlay()
 	bool exit = false;
 	while(!exit)
 	{
-		update();
-		//Clear screen
-		//Draw
-		exit = checkExit();
+		if(gameStart)
+		{
+			update();
+			//Clear screen
+			//Draw
+			exit = checkExit();
+		}
 	}
 }
 
