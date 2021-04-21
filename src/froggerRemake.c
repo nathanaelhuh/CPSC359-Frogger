@@ -265,23 +265,28 @@ void *playerInput(void *params)
 						case 3:		//Start
 							//Pause game
 							paused = true;
+							break;
 						case 4:		//Up
 							//Move frog up
 							printf("\nFrog going up");
 							game.frog.y = game.frog.y + 1;
+							break;
 						case 5:		//Down
 							printf("\nFrog going down");
 							game.frog.y = game.frog.y - 1;
+							break;
 						case 6:		//Left
 							//Move frog left
 							printf("\nFrog going left");
 							game.frog.x = game.frog.x - 1;
+							break;
 						case 7:		//Right
 							//Move frog right
 							printf("\nFrog going right");
 							game.frog.x = game.frog.x + 1;
+							break;
 						default:
-						{}
+							break;
 					}
 				}
 			}
@@ -302,29 +307,33 @@ void *playerInput(void *params)
 					switch(button)
 					{
 						case 0:		//B
-						{}
+							break;
 						case 1:		//Y
-						{}
+							break;
 						case 2:		//Select
-						{}
+							break;
 						case 3:		//Start
 							//Unpause game
 							paused = false;
+							break;
 						case 4:		//Up
-
+							break;
 						case 5:		//Down
+							break;
 						case 6:		//Left
+							break;
 						case 7:		//Right
+							break;
 						case 8:		//A
-						{}
+							break;
 						case 9:		//X
-						{}
+							break;
 						case 10:	//Left bumper
-						{}
+							break;
 						case 11:	//Right bumper
-						{}
+							break;
 						default:
-						{}
+							break;
 					}
 				}
 			}
