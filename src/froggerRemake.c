@@ -8,6 +8,12 @@
 #include <sys/mman.h>
 #include "initGPIO.h"
 
+#include "resources/Background.c"
+#include "resources/CarImage.c"
+#include "resources/FrogImage.c"
+#include "resources/LogImage(48x32).c"
+#include "resources/TurtleImage(32x32).c"
+
 #define GPSEL0 0
 #define GPSET0 7
 #define GPCLR0 10
@@ -178,10 +184,12 @@ bool checkExit();
 void *playerInput(void *params);
 void gamePlay();
 void *counter(void *params);
+void clear();
+void *draw(void *params);
 
 struct GameState game;
 int currentStage;
-bool gameStart, paused;
+bool gameStart, paused, quit;
 
 int main(int argc, char **argv)
 {
@@ -189,11 +197,19 @@ int main(int argc, char **argv)
 	printf("\nGame menu");
     gameStart = false;
 	paused = false;
+	quit = false;
 
 	pthread_t inputThread;
+	pthread_t drawThread;
 	pthread_attr_t attr;
 	pthread_attr_init(&attr);
 	int tc = pthread_create(&inputThread, &attr, playerInput, "1");
+	if(tc)
+	{
+		printf("ERROR creating thread, %d\n", tc);
+		exit(-1);
+	}
+	int tc = pthread_create(&drawThread, &attr, draw, "1");
 	if(tc)
 	{
 		printf("ERROR creating thread, %d\n", tc);
@@ -207,7 +223,6 @@ void *playerInput(void *params)
 	unsigned int *gpioPtr = getGPIOPtr();
 	initializeGPIO(gpioPtr);
 	unsigned short button;
-	bool quit = false;
 	bool startHighlighted = true;
 	//LOOP for menu selection
 	while(!quit)
@@ -435,6 +450,107 @@ void update()
 	}
 	
 	printf("\n\nData\nTime remaining: %i\nLives: %i\nMoves: %i\n", game.secondsRemaining, game.extraLives, game.movesRemaining);
+}
+
+void clear()
+{
+
+}
+
+typedef struct {
+	int color;
+	int x, y;
+} Pixel;
+
+typedef struct {
+	Pixel pixels[640][640];
+} Stage;
+
+struct fbs framebufferstruct;
+void drawPixel(Stage *stage);
+
+void *draw(void *params)
+{
+
+	framebufferstruct = initFbInfo();
+	while(!quit)
+	{
+		while(!gameStart)
+		{
+
+		}
+		while(gameStart && !paused)
+		{
+			int *backgroundPtr=(int *) Background.image_pixels;
+			int *carPtr=(int *) Car.image_pixels;
+			int *logPtr=(int *) Log.image_pixels;
+			int *turtlePtr=(int *) Turtle.image_pixels;
+			int *frogPtr=(int *) Frog.image_pixels;
+			
+
+			/* initialize a pixel */
+			Stage *stage;
+			stage = malloc(sizeof(Stage));
+			int i=0;
+			unsigned int quarter,byte,word;
+			for (int y = 0; y < 640; y++)
+			{
+				for (int x = 0; x < 640; x++) 
+				{	
+						stage->pixels[x][y]->color = backgroundPtr[i]; 
+						stage->pixels[x][y]->x = x;
+						stage->pixels[x][y]->y = y;
+						i++;
+						
+				}
+			}
+			for(int j = 0; j < 10; j++)	//OBJECTS
+			{
+				i=0;
+				unsigned int quarter,byte,word;
+				for (int y = 0; y < 32; y++)
+				{
+					for (int x = 0; x < 32; x++) 
+					{	
+							stage->pixels[x + game.stages[currentStage].objects[j].x][y + game.stages[currentStage].objects[j].y]->color = carPtr[i]; 
+							stage->pixels[x + game.stages[currentStage].objects[j].x][y + game.stages[currentStage].objects[j].y]->x = x;	//Update locations for objects
+							stage->pixels[x + game.stages[currentStage].objects[j].x][y + game.stages[currentStage].objects[j].y]->y = y;
+				
+							drawPixel(pixel);
+							i++;
+							
+					}
+				}
+			}
+			//Drawing frog
+			i=0;
+			unsigned int quarter,byte,word;
+			for (int y = 0; y < 32; y++)
+			{
+				for (int x = 0; x < 32; x++) 
+				{	
+						stage->pixels[x + (game.frog.x * 32)][y + (game.frog.y * 32)]->color = frogPtr[i]; 
+						stage->pixels[x + (game.frog.x * 32)][y + (game.frog.y * 32)]->x = x + (game.frog.x * 32);
+						stage->pixels[x + (game.frog.x * 32)][y + (game.frog.y * 32)]->y = y + (game.frog.y * 32);
+						i++;			
+				}
+			}
+			drawPixel(stage);
+			/* free pixel's allocated memory */
+			free(pixel);
+			pixel = NULL;
+			munmap(framebufferstruct.fptr, framebufferstruct.screenSize);
+		}
+		while(paused)
+		{
+			
+		}
+	}
+}
+
+void drawPixel(Stage *stage)
+{
+	memcpy(framebuffer->fbp, stage, 1280*720*2);
 }
 
 int collisionDetection()
