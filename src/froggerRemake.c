@@ -535,9 +535,9 @@ void *draw(void *params)
 			}
 			drawPixel(stage);
 			/* free pixel's allocated memory */
-			free(pixel);
-			pixel = NULL;
-			munmap(framebufferstruct.fbp, framebufferstruct.screenSize);
+			free(stage);
+			stage = NULL;
+			munmap(framebufferstruct.fptr, framebufferstruct.screenSize);
 		}
 		while(paused)
 		{
@@ -548,7 +548,7 @@ void *draw(void *params)
 
 void drawPixel(Stage *stage)
 {
-	memcpy(framebufferstruct->fbp, stage, 1280*720*2);
+	memcpy(framebufferstruct.fptr, stage, 1280*720*2);
 }
 
 int collisionDetection()
