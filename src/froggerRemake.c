@@ -6,6 +6,7 @@
 #include <stdio.h>
 #include <fcntl.h>
 #include <sys/mman.h>
+#include <string.h>
 #include "initGPIO.h"
 #include "framebuffer.h"
 
@@ -536,7 +537,7 @@ void *draw(void *params)
 			/* free pixel's allocated memory */
 			free(pixel);
 			pixel = NULL;
-			munmap(framebufferstruct.fbp, framebufferstruct.screensize);
+			munmap(framebufferstruct.fbp, framebufferstruct.screenSize);
 		}
 		while(paused)
 		{
@@ -547,7 +548,7 @@ void *draw(void *params)
 
 void drawPixel(Stage *stage)
 {
-	memcpy(framebuffer->fbp, stage, 1280*720*2);
+	memcpy(framebufferstruct->fbp, stage, 1280*720*2);
 }
 
 int collisionDetection()
