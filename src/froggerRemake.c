@@ -7,6 +7,7 @@
 #include <fcntl.h>
 #include <sys/mman.h>
 #include "initGPIO.h"
+#include "framebuffer.h"
 
 #include "../resources/Background.c"
 #include "../resources/CarImage.c"
