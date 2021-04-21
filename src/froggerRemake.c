@@ -295,7 +295,7 @@ void *playerInput(void *params)
 					}
 				}
 			}
-			delayMicroseconds(1000000);
+			delayMicroseconds(50000);
 		}
 		while(paused)
 		{	
@@ -343,7 +343,7 @@ void *playerInput(void *params)
 				}
 			}
 			printf("\nPAUSED");
-			delayMicroseconds(1000000);
+			delayMicroseconds(50000);
 		}
 	}
 	pthread_exit(NULL);
@@ -398,7 +398,7 @@ void gamePlay()
 			//Clear screen
 			//Draw
 			exit = checkExit();
-			delayMicroseconds(100000);
+			delayMicroseconds(50000);
 		}
 	}
 }
@@ -408,7 +408,7 @@ void update()
 	//printf("\nUpdate");
 	printf("\nFrog y: %i Frog x: %i", game.frog.y, game.frog.x);
 	clock_t currentTime = clock();
-	int timePassed = game.startTime - currentTime;
+	int timePassed = currentTime - game.startTime;
 	game.secondsRemaining = 999 - timePassed;
 
 	printf("\n\nData\nTime remaining: %i\nLives: %i\nMoves: %i\n", game.secondsRemaining, game.extraLives, game.movesRemaining);
