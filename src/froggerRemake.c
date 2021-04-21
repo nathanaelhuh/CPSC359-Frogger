@@ -411,8 +411,6 @@ void update()
 	int timePassed = (currentTime - game.startTime) / CLOCKS_PER_SEC;
 	game.secondsRemaining = 999 - timePassed;
 
-	printf("\n\nData\nTime remaining: %i\nLives: %i\nMoves: %i\n", game.secondsRemaining, game.extraLives, game.movesRemaining);
-
 	int collide = collisionDetection();
 	if(collide != 0 && game.stages->isWater)
 	{
@@ -426,8 +424,8 @@ void update()
 	if(game.frog.x < 0 || game.frog.x > 20 || game.frog.y < 0)
 	{
 		game.extraLives = game.extraLives - 1;
-		game.frog.x = 0;
-		game.frog.y = 10;
+		game.frog.x = 10;
+		game.frog.y = 0;
 	}
 	if(game.frog.y >= 20)
 	{
@@ -435,6 +433,8 @@ void update()
 		game.frog.y = 0;
         printf("\nGoing up a stage");
 	}
+	
+	printf("\n\nData\nTime remaining: %i\nLives: %i\nMoves: %i\n", game.secondsRemaining, game.extraLives, game.movesRemaining);
 }
 
 int collisionDetection()
