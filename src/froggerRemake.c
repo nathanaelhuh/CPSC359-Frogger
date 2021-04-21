@@ -206,13 +206,13 @@ int main(int argc, char **argv)
 	int tc = pthread_create(&inputThread, &attr, playerInput, "1");
 	if(tc)
 	{
-		printf("ERROR creating thread, %d\n", tc);
+		printf("ERROR creating input thread, %d\n", tc);
 		exit(-1);
 	}
-	int tc = pthread_create(&drawThread, &attr, draw, "1");
+	tc = pthread_create(&drawThread, &attr, draw, "1");
 	if(tc)
 	{
-		printf("ERROR creating thread, %d\n", tc);
+		printf("ERROR creating draw thread, %d\n", tc);
 		exit(-1);
 	}
 	gamePlay();
@@ -481,11 +481,11 @@ void *draw(void *params)
 		}
 		while(gameStart && !paused)
 		{
-			int *backgroundPtr=(int *) Background.image_pixels;
-			int *carPtr=(int *) Car.image_pixels;
-			int *logPtr=(int *) Log.image_pixels;
-			int *turtlePtr=(int *) Turtle.image_pixels;
-			int *frogPtr=(int *) Frog.image_pixels;
+			int *backgroundPtr=(int *) Background.pixel_data;
+			int *carPtr=(int *) Car.pixel_data;
+			int *logPtr=(int *) Log.pixel_data;
+			int *turtlePtr=(int *) Turtle.pixel_data;
+			int *frogPtr=(int *) Frog.pixel_data;
 			
 
 			/* initialize a pixel */
@@ -497,9 +497,9 @@ void *draw(void *params)
 			{
 				for (int x = 0; x < 640; x++) 
 				{	
-						stage->pixels[x][y]->color = backgroundPtr[i]; 
-						stage->pixels[x][y]->x = x;
-						stage->pixels[x][y]->y = y;
+						stage->pixels[x][y].color = backgroundPtr[i]; 
+						stage->pixels[x][y].x = x;
+						stage->pixels[x][y].y = y;
 						i++;
 						
 				}
@@ -507,16 +507,13 @@ void *draw(void *params)
 			for(int j = 0; j < 10; j++)	//OBJECTS
 			{
 				i=0;
-				unsigned int quarter,byte,word;
 				for (int y = 0; y < 32; y++)
 				{
 					for (int x = 0; x < 32; x++) 
 					{	
-							stage->pixels[x + game.stages[currentStage].objects[j].x][y + game.stages[currentStage].objects[j].y]->color = carPtr[i]; 
-							stage->pixels[x + game.stages[currentStage].objects[j].x][y + game.stages[currentStage].objects[j].y]->x = x;	//Update locations for objects
-							stage->pixels[x + game.stages[currentStage].objects[j].x][y + game.stages[currentStage].objects[j].y]->y = y;
-				
-							drawPixel(pixel);
+							stage->pixels[x + game.stages[currentStage].objects[j].x][y + game.stages[currentStage].objects[j].y].color = carPtr[i]; 
+							stage->pixels[x + game.stages[currentStage].objects[j].x][y + game.stages[currentStage].objects[j].y].x = x;	//Update locations for objects
+							stage->pixels[x + game.stages[currentStage].objects[j].x][y + game.stages[currentStage].objects[j].y].y = y;
 							i++;
 							
 					}
@@ -524,14 +521,13 @@ void *draw(void *params)
 			}
 			//Drawing frog
 			i=0;
-			unsigned int quarter,byte,word;
 			for (int y = 0; y < 32; y++)
 			{
 				for (int x = 0; x < 32; x++) 
 				{	
-						stage->pixels[x + (game.frog.x * 32)][y + (game.frog.y * 32)]->color = frogPtr[i]; 
-						stage->pixels[x + (game.frog.x * 32)][y + (game.frog.y * 32)]->x = x + (game.frog.x * 32);
-						stage->pixels[x + (game.frog.x * 32)][y + (game.frog.y * 32)]->y = y + (game.frog.y * 32);
+						stage->pixels[x + (game.frog.x * 32)][y + (game.frog.y * 32)].color = frogPtr[i]; 
+						stage->pixels[x + (game.frog.x * 32)][y + (game.frog.y * 32)].x = x + (game.frog.x * 32);
+						stage->pixels[x + (game.frog.x * 32)][y + (game.frog.y * 32)].y = y + (game.frog.y * 32);
 						i++;			
 				}
 			}
@@ -539,7 +535,7 @@ void *draw(void *params)
 			/* free pixel's allocated memory */
 			free(pixel);
 			pixel = NULL;
-			munmap(framebufferstruct.fptr, framebufferstruct.screenSize);
+			munmap(framebufferstruct.fbp, framebufferstruct.screensize);
 		}
 		while(paused)
 		{
