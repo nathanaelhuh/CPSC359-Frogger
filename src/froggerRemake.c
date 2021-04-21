@@ -247,6 +247,7 @@ void *playerInput(void *params)
 					}
 				}
 			}
+			delayMicroseconds(100000);
 		}
 		while(gameStart && !paused)
 		{
@@ -266,20 +267,25 @@ void *playerInput(void *params)
 							paused = true;
 						case 4:		//Up
 							//Move frog up
+							printf("\nFrog going up");
 							game.frog.y = game.frog.y + 1;
 						case 5:		//Down
+							printf("\nFrog going down");
 							game.frog.y = game.frog.y - 1;
 						case 6:		//Left
 							//Move frog left
+							printf("\nFrog going left");
 							game.frog.x = game.frog.x - 1;
 						case 7:		//Right
 							//Move frog right
+							printf("\nFrog going right");
 							game.frog.x = game.frog.x + 1;
 						default:
 						{}
 					}
 				}
 			}
+			delayMicroseconds(100000);
 		}
 		while(paused)
 		{	
@@ -322,6 +328,8 @@ void *playerInput(void *params)
 					}
 				}
 			}
+			printf("\nPAUSED");
+			delayMicroseconds(100000);
 		}
 	}
 	pthread_exit(NULL);
@@ -383,7 +391,8 @@ void gamePlay()
 
 void update()
 {
-	printf("\nUpdate");
+	//printf("\nUpdate");
+	printf("\nFrog y: %i", game.frog.y);
 	int collide = collisionDetection();
 	if(collide != 0 && game.stages->isWater)
 	{
