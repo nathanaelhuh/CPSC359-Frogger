@@ -295,7 +295,7 @@ void *playerInput(void *params)
 					}
 				}
 			}
-			delayMicroseconds(50000);
+			delayMicroseconds(100000);
 		}
 		while(paused)
 		{	
@@ -343,7 +343,7 @@ void *playerInput(void *params)
 				}
 			}
 			printf("\nPAUSED");
-			delayMicroseconds(50000);
+			delayMicroseconds(100000);
 		}
 	}
 	pthread_exit(NULL);
@@ -426,6 +426,8 @@ void update()
 	if(game.frog.x < 0 || game.frog.x > 20 || game.frog.y < 0)
 	{
 		game.extraLives = game.extraLives - 1;
+		game.frog.x = 0;
+		game.frog.y = 10;
 	}
 	if(game.frog.y >= 20)
 	{
