@@ -8,11 +8,11 @@
 #include <sys/mman.h>
 #include "initGPIO.h"
 
-#include "resources/Background.c"
-#include "resources/CarImage.c"
-#include "resources/FrogImage.c"
-#include "resources/LogImage(48x32).c"
-#include "resources/TurtleImage(32x32).c"
+#include "../resources/Background.c"
+#include "../resources/CarImage.c"
+#include "../resources/FrogImage.c"
+#include "../resources/LogImage(48x32).c"
+#include "../resources/TurtleImage(32x32).c"
 
 #define GPSEL0 0
 #define GPSET0 7
