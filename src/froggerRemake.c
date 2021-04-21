@@ -376,6 +376,7 @@ void gamePlay()
 			//Clear screen
 			//Draw
 			exit = checkExit();
+			delayMicroseconds(100000);
 		}
 	}
 }
