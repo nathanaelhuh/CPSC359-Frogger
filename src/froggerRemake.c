@@ -33,6 +33,8 @@
 #include "../resources/Time.c"
 #include "../resources/WinScreen.c"
 #include "../resources/LoseScreen.c"
+#include "../resources/WaterBackground.c"
+#include "../resources/GameBoard.c"
 
 
 #define GPSEL0 0
@@ -610,6 +612,8 @@ void *draw(void *params)
 	short int *timePtr=(short int *) Time.pixel_data;
 	short int *winPtr=(short int *) Win.pixel_data;
 	short int *losePtr=(short int *) Lose.pixel_data;
+	short int *gameBoardPtr=(short int *) GameBoard.pixel_data;
+	short int *waterPtr=(short int *) Water.pixel_data;
 
 	Pixel *pixel;
 	pixel = malloc(sizeof(Pixel));
@@ -674,12 +678,46 @@ void *draw(void *params)
 			{
 				for (int x = 0; x < 720; x++) 
 				{	
-						pixel->color = backgroundPtr[i];
+						pixel->color = gameBoardPtr[i];
 						pixel->x = x;
 						pixel->y = y;
 
 						drawPixel(pixel);
 						i++;		
+				}
+			}
+			if(game.stages[currentStage]->isWater)
+			{
+				i = 0;
+				for (int y = 0; y < 640; y++)
+				{
+					for (int x = 0; x < 640; x++) 
+					{	
+							pixel->color = waterPtr[i];
+							pixel->color = gameBoardPtr[i];
+							pixel->x = x;
+							pixel->y = y;
+
+							drawPixel(pixel);
+							i++;		
+					}
+				}
+			}
+			else if(!game.stages[currentStage]->isWater)
+			{
+				i = 0;
+				for (int y = 0; y < 640; y++)
+				{
+					for (int x = 0; x < 640; x++) 
+					{	
+							pixel->color = backgroundPtr[i];
+							pixel->color = gameBoardPtr[i];
+							pixel->x = x;
+							pixel->y = y;
+
+							drawPixel(pixel);
+							i++;		
+					}
 				}
 			}
 			for(int j = 0; j < 18; j++)	//OBJECTS
