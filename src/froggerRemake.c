@@ -529,7 +529,7 @@ void update()
 	{
 		game.frog.x = game.frog.x + game.stages[currentStage].objects[collide].velocity;
 	}
-	else if((collide != -1 && !game.stages[currentStage].isWater) || (game.stages[currentStage].isWater && collide == -1))
+	else if((collide != -1 && !game.stages[currentStage].isWater) || (game.stages[currentStage].isWater && collide == -1 && game.frog.y > 1 && game.frog.y < 20))
 	{
 		game.extraLives = game.extraLives - 1;
 		game.frog.x = 10;
