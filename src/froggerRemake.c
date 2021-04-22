@@ -293,7 +293,7 @@ void *playerInput(void *params)
 					}
 				}
 			}
-			delayMicroseconds(10000000);
+			delayMicroseconds(1000000);
 		}
 		//Loop for gameplay and game not paused
 		while(gameStart && !paused && !game.gameOver)
@@ -341,7 +341,7 @@ void *playerInput(void *params)
 					}
 				}
 			}
-			delayMicroseconds(1000000);
+			delayMicroseconds(100000);
 		}
 		while(paused && !game.gameOver)
 		{	
@@ -400,7 +400,7 @@ void *playerInput(void *params)
 				}
 			}
 			printf("\nPAUSED");
-			delayMicroseconds(1000000);
+			delayMicroseconds(100000);
 		}
 		while(game.gameOver)
 		{
@@ -478,7 +478,7 @@ void gamePlay()
 			{
 				update();
 				exit = checkExit();
-				//delayMicroseconds(50000);
+				delayMicroseconds(1000);
 			}
 		}
 		while(waitOnPlayAgain);
@@ -512,12 +512,12 @@ void update()
 	}
 
 	//Adds velocity to objects, resets them when they hit the edge
-	for(int i = 0; i < 10; i++)
+	for(int i = 0; i < 18; i++)
 	{
 		for(int j = 0; j < 32; j++)
 		{
 			game.stages[currentStage].objects[i].pixelPos = j;
-			//delayMicroseconds(1000);
+			delayMicroseconds(1000);
 		}
 		game.stages[currentStage].objects[i].x = game.stages[currentStage].objects[i].x + game.stages[currentStage].objects[i].velocity;
 		if(game.stages[currentStage].objects[i].x < 0)
