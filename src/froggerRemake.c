@@ -395,7 +395,7 @@ void initializeGame()
 	currentStage = 0;
 
 	game.frog.x = 10;
-	game.frog.y = 0;
+	game.frog.y = 20;
 
 	//Initializes game objects
 	for(int i = 0; i < 4; i++)
@@ -412,7 +412,7 @@ void initializeGame()
                 }
 			}
 			game.stages[i].objects[j].x = 0;
-			game.stages[i].objects[j].y = j;
+			game.stages[i].objects[j].y = j + 1;
 			game.stages[i].objects[j].velocity = temp;		//TODO: Might change object velocities later
 		}
 		temp = -temp;
@@ -468,17 +468,17 @@ void update()
 		}
 	}
 	//Bounds detection for frog
-	if(game.frog.x < 0 || game.frog.x > 20 || game.frog.y < 0)
+	if(game.frog.x < 0 || game.frog.x > 20 || game.frog.y > 20)
 	{
 		game.extraLives = game.extraLives - 1;
 		game.frog.x = 10;
-		game.frog.y = 0;
+		game.frog.y = 20;
 	}
 	//Checks if frog completed stage
-	if(game.frog.y >= 20)
+	if(game.frog.y <= 20)
 	{
 		currentStage = currentStage + 1;
-		game.frog.y = 0;
+		game.frog.y = 20;
         printf("\nGoing up a stage");
 	}
 	
