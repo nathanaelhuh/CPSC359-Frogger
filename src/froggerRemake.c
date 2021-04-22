@@ -508,7 +508,7 @@ void gamePlay()
 		printf("\nGamePlay");
 		initializeGame();
 		bool exit = false;
-		while(!exit && !quit)
+		while(!exit)
 		{
 			if(gameStart)
 			{
@@ -521,8 +521,13 @@ void gamePlay()
 		if(playAgain == true)
 		{
 			gameStart = false;
-			//FIGURE OUT REST NEEDED HERE
+			paused = false;
+			quit = false;
+			playAgain = false;
+			spawnPowerups = false;
+			powerupTimer = 30;
 		}
+		
 	}
 }
 
@@ -548,6 +553,7 @@ void update()
 	{
 		game.frog.x = game.frog.x + game.stages[currentStage].objects[collide].velocity;
 	}
+	//If frog is out of bounds, or dies
 	else if((collide != -1 && !game.stages[currentStage].isWater) || (game.stages[currentStage].isWater && collide == -1 && game.frog.y > 1 && game.frog.y < 20))
 	{
 		game.extraLives = game.extraLives - 1;
@@ -558,11 +564,13 @@ void update()
 	//Adds velocity to objects, resets them when they hit the edge
 	for(int i = 0; i < 18; i++)
 	{
+		//Adds for pixel effect of moving per pixel
 		for(int j = 0; j < 32; j++)
 		{
 			game.stages[currentStage].objects[i].pixelPos = j;
 			delayMicroseconds(1000);
 		}
+		//Object bounds detection to loop them across the screen
 		game.stages[currentStage].objects[i].x = game.stages[currentStage].objects[i].x + game.stages[currentStage].objects[i].velocity;
 		if(game.stages[currentStage].objects[i].x < 0)
 		{
@@ -1048,7 +1056,7 @@ void *draw(void *params)
 				}
 			}
 		}
-		while(game.gameOver)
+		while(waitOnPlayAgain)
 		{
 			i = 0;
 			for (int y = 0; y < 720; y++)
