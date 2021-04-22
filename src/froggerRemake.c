@@ -431,7 +431,7 @@ void initializeGame()
 //Function for game
 void gamePlay()
 {
-	while(playAgain)
+	while(!quit)
 	{
 		printf("\nGamePlay");
 		initializeGame();
