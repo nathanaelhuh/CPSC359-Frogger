@@ -481,7 +481,7 @@ void gamePlay()
 				//delayMicroseconds(50000);
 			}
 		}
-		while(waitingOnPlayAgain);
+		while(waitOnPlayAgain);
 		if(playAgain == true)
 		{
 			gameStart = false;
