@@ -729,7 +729,7 @@ void *draw(void *params)
 			}
 			for(int j = 0; j < 18; j++)	//OBJECTS
 			{
-				for(int k = 0; k < game.stages.[currentStage].objects[j].length; k++)
+				for(int k = 0; k < game.stages[currentStage].objects[j].length; k++)
 				{
 					i = 0;
 					for (int y = 0; y < 32; y++)
