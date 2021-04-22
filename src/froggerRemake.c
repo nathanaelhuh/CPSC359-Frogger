@@ -162,12 +162,13 @@ struct Object {
 	int y;
 	bool isPlatform;
 	int velocity;
+	int pixelPos;
 };
 
 struct Stage {
 	bool isWater;
 	struct Tile board[20][20];
-	struct Object objects[10];
+	struct Object objects[18];
 
 };
 struct GameState {
@@ -195,7 +196,8 @@ void *draw(void *params);
 
 struct GameState game;
 int currentStage;
-bool gameStart, paused, quit, startHighlighted;
+bool gameStart, paused, quit, startHighlighted, playAgain;
+int menuSelect;
 
 int main(int argc, char **argv)
 {
@@ -204,7 +206,7 @@ int main(int argc, char **argv)
     gameStart = false;
 	paused = false;
 	quit = false;
-
+	playAgain = false;
 	pthread_t inputThread;	//Thread for input
 	pthread_t drawThread;	//Thread for graphics
 	pthread_attr_t attr;
@@ -325,7 +327,7 @@ void *playerInput(void *params)
 		}
 		while(paused)
 		{	
-			int menuSelect = 0;
+			menuSelect = 0;
 			printf("Please press a button\n");
 			unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
 			for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
@@ -348,11 +350,11 @@ void *playerInput(void *params)
 							paused = false;
 							break;
 						case 4:		//Up
-							if(menuSelect == 1)
+							if(menuSelect > 0)
 								menuSelect = menuSelect - 1;
 							break;
 						case 5:		//Down
-							if(menuSelect == 0)
+							if(menuSelect < 2)
 								menuSelect = menuSelect + 1;
 							break;
 						case 6:		//Left
@@ -362,6 +364,10 @@ void *playerInput(void *params)
 						case 8:		//A
 							if(menuSelect == 0)
 								paused = false;
+							else if(menuSelect == 1)
+							{
+								//Restart game
+							}
 							else
 								quit = true;
 							break;
@@ -403,7 +409,7 @@ void initializeGame()
 	for(int i = 0; i < 4; i++)
 	{
 		int temp = -1;	//Temp is for reversing velocities of objects
-		for(int j = 0; j < 10; j++)
+		for(int j = 0; j < 18; j++)
 		{
 			for(int a = 0; a < 20; a++)
 			{
@@ -416,8 +422,8 @@ void initializeGame()
 			game.stages[i].objects[j].x = 0;
 			game.stages[i].objects[j].y = j + 1;
 			game.stages[i].objects[j].velocity = temp;		//TODO: Might change object velocities later
+			temp = -temp;
 		}
-		temp = -temp;
 		game.stages[i].isWater = i%2;
 	}
 }
@@ -425,18 +431,24 @@ void initializeGame()
 //Function for game
 void gamePlay()
 {
-	printf("\nGamePlay");
-	initializeGame();
-	bool exit = false;
-	while(!exit && !quit)
+	while(playAgain)
 	{
-		if(gameStart)
+		printf("\nGamePlay");
+		initializeGame();
+		bool exit = false;
+		while(!exit && !quit)
 		{
-			update();
-			//Clear screen
-			//Draw
-			exit = checkExit();
-			delayMicroseconds(50000);
+			if(gameStart)
+			{
+				update();
+				exit = checkExit();
+				delayMicroseconds(50000);
+			}
+		}
+		if(playAgain == true)
+		{
+			gameStart = false;
+			//FIGURE OUT REST NEEDED HERE
 		}
 	}
 }
@@ -451,11 +463,11 @@ void update()
 
 	int collide = collisionDetection();	
 	//Adds platform velocity to frog
-	if(collide != 0 && game.stages->isWater)	//If stage is water then objects are platforms
+	if(collide != -1 && game.stages->isWater)	//If stage is water then objects are platforms
 	{
 		game.frog.x = game.frog.x + game.stages[currentStage].objects[collide].velocity;
 	}
-	else if(collide != 0 && !game.stages->isWater)
+	else if(collide != -1 && !game.stages->isWater)
 	{
 		game.extraLives = game.extraLives - 1;
 		game.frog.x = 10;
@@ -465,14 +477,19 @@ void update()
 	//Adds velocity to objects, resets them when they hit the edge
 	for(int i = 0; i < 10; i++)
 	{
-		game.stages[currentStage].objects[collide].x = game.stages[currentStage].objects[collide].x + game.stages[currentStage].objects[collide].velocity;
-		if(game.stages[currentStage].objects[collide].x < 0)
+		for(int j = 0; j < 32; j++)
 		{
-			game.stages[currentStage].objects[collide].x = 20;
+			game.stages[currentStage].objects[i].pixelPos = j;
+			delayMicroseconds(1000);
 		}
-		if(game.stages[currentStage].objects[collide].x > 20)
+		game.stages[currentStage].objects[i].x = game.stages[currentStage].objects[i].x + game.stages[currentStage].objects[i].velocity;
+		if(game.stages[currentStage].objects[i].x < 0)
 		{
-			game.stages[currentStage].objects[collide].x = 0;
+			game.stages[currentStage].objects[i].x = 20;
+		}
+		if(game.stages[currentStage].objects[i].x > 20)
+		{
+			game.stages[currentStage].objects[i].x = 0;
 		}
 	}
 	//Bounds detection for frog
@@ -505,10 +522,6 @@ typedef struct {
 	short int color;
 	int x, y;
 } Pixel;
-
-typedef struct {
-	Pixel pixels[640][640];
-} Stage;
 
 struct fbs framebufferstruct;
 void drawPixel(Pixel *pixel);
@@ -586,16 +599,12 @@ void *draw(void *params)
 		while(gameStart && !paused)
 		{
 			delayMicroseconds(10000);
-			//Pointers to images
-			// Stage *stage;
-			// stage = malloc(sizeof(Stage));
 			i = 0;
-			//unsigned int quarter,byte,word;
-			for (int y = 0; y < 640; y++)
+			for (int y = 0; y < 720; y++)
 			{
-				for (int x = 0; x < 640; x++) 
+				for (int x = 0; x < 720; x++) 
 				{	
-						pixel->color = 0000;//backgroundPtr[i];
+						pixel->color = backgroundPtr[i];
 						pixel->x = x;
 						pixel->y = y;
 
@@ -611,7 +620,7 @@ void *draw(void *params)
 					for (int x = 0; x < 32; x++) 
 					{	
 							pixel->color = carPtr[i]; 
-							pixel->x = x + (game.stages[currentStage].objects[j].x * 32);	//Update locations for objects
+							pixel->x = x + (game.stages[currentStage].objects[j].x * 32) + game.stages[currentStage].objects[j].pixelPos;	//Update locations for objects
 							pixel->y = y + (game.stages[currentStage].objects[j].y * 32);
 							
 							drawPixel(pixel);
@@ -650,6 +659,20 @@ void *draw(void *params)
 						i++;			
 				}
 			}
+			
+			i = 0;
+			for (int y = 0; y < 20; y++)
+			{
+				for (int x = 0; x < 320; x++) 
+				{
+					pixel->color = selectionBarPtr[i]; 
+					pixel->x = x;
+					pixel->y = y + 200 + (200*menuSelect);
+						
+					drawPixel(pixel);
+					i++;		
+				}
+			}
 		}
 	}
 	/* free pixel's allocated memory */
@@ -681,7 +704,7 @@ int collisionDetection()
 		if(game.stages[currentStage].objects[i].x == game.frog.x && game.stages[currentStage].objects[i].y == game.frog.y)
 			return i;
 	}
-	return 0;
+	return -1;
 }
 
 //Checks to see if game is over via frog reaching castle or running out of live/moves/time
