@@ -475,7 +475,7 @@ void update()
 		game.frog.y = 20;
 	}
 	//Checks if frog completed stage
-	if(game.frog.y <= 20)
+	if(game.frog.y <= 0)
 	{
 		currentStage = currentStage + 1;
 		game.frog.y = 20;
