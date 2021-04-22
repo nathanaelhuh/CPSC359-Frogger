@@ -737,7 +737,7 @@ void *draw(void *params)
 				{
 					pixel->color = selectionBarPtr[i]; 
 					pixel->x = x + 160;
-					pixel->y = y + 300 + (100*menuSelect);
+					pixel->y = y + 250 + (100*menuSelect);
 						
 					drawPixel(pixel);
 					i++;		
