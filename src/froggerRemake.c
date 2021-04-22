@@ -523,13 +523,13 @@ void *draw(void *params)
 
 	Pixel *pixel;
 	pixel = malloc(sizeof(Pixel));
-
+	int i = 0;
 
 	while(!quit)
 	{
 		while(!gameStart)
 		{
-			int i=0;
+			i=0;
 			for (int y = 0; y < 640; y++)
 			{
 				for (int x = 0; x < 640; x++) 
@@ -578,16 +578,17 @@ void *draw(void *params)
 		}
 		while(gameStart && !paused)
 		{
+			delayMicroseconds(10000);
 			//Pointers to images
 			// Stage *stage;
 			// stage = malloc(sizeof(Stage));
-			int i=0;
+			i = 0;
 			//unsigned int quarter,byte,word;
 			for (int y = 0; y < 640; y++)
 			{
 				for (int x = 0; x < 640; x++) 
 				{	
-						pixel->color = backgroundPtr[i]; 
+						pixel->color = backgroundPtr[i];
 						pixel->x = x;
 						pixel->y = y;
 
@@ -597,7 +598,7 @@ void *draw(void *params)
 			}
 			for(int j = 0; j < 10; j++)	//OBJECTS
 			{
-				i=0;
+				i = 0;
 				for (int y = 0; y < 32; y++)
 				{
 					for (int x = 0; x < 32; x++) 
@@ -612,7 +613,7 @@ void *draw(void *params)
 				}
 			}
 			//Drawing frog
-			i=0;
+			i = 0;
 			for (int y = 0; y < 32; y++)
 			{
 				for (int x = 0; x < 32; x++) 
@@ -629,7 +630,7 @@ void *draw(void *params)
 		}
 		while(paused)
 		{
-			int i = 0;
+			i = 0;
 			for (int y = 0; y < 320; y++)
 			{
 				for (int x = 0; x < 320; x++) 
