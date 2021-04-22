@@ -393,6 +393,9 @@ void *playerInput(void *params)
 //Initializes variables needed for game
 void initializeGame()
 {
+	time_t t;
+	srand((unsigned) time(&t));
+
 	printf("\nInit game");
 	game.startTime = clock();
 	game.score = 0;
@@ -421,7 +424,7 @@ void initializeGame()
 			}
 			game.stages[i].objects[j].x = 0;
 			game.stages[i].objects[j].y = j + 1;
-			game.stages[i].objects[j].velocity = temp;		//TODO: Might change object velocities later
+			game.stages[i].objects[j].velocity = temp*rand()%3;		//TODO: Might change object velocities later
 			temp = -temp;
 		}
 		game.stages[i].isWater = i%2;
