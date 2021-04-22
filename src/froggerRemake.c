@@ -506,6 +506,12 @@ void *draw(void *params)
 {
 
 	framebufferstruct = initFbInfo();
+	int *backgroundPtr=(int *) Background.pixel_data;	
+	int *carPtr=(int *) Car.pixel_data;
+	int *logPtr=(int *) Log.pixel_data;
+	int *turtlePtr=(int *) Turtle.pixel_data;
+	int *frogPtr=(int *) Frog.pixel_data;
+	
 	while(!quit)
 	{
 		while(!gameStart)
@@ -515,11 +521,7 @@ void *draw(void *params)
 		while(gameStart && !paused)
 		{
 			//Pointers to images
-			int *backgroundPtr=(int *) Background.pixel_data;	
-			int *carPtr=(int *) Car.pixel_data;
-			int *logPtr=(int *) Log.pixel_data;
-			int *turtlePtr=(int *) Turtle.pixel_data;
-			int *frogPtr=(int *) Frog.pixel_data;
+			
 
 			Pixel *pixel;
 			pixel = malloc(sizeof(Pixel));
