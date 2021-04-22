@@ -455,6 +455,12 @@ void update()
 	{
 		game.frog.x = game.frog.x + game.stages[currentStage].objects[collide].velocity;
 	}
+	else if(collide != 0 && !game.stages->isWater)
+	{
+		game.extraLives = game.extraLives - 1;
+		game.frog.x = 10;
+		game.frog.y = 20;
+	}
 
 	//Adds velocity to objects, resets them when they hit the edge
 	for(int i = 0; i < 10; i++)
