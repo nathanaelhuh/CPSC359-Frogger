@@ -255,6 +255,7 @@ int main(int argc, char **argv)
 		exit(-1);
 	}
 	gamePlay();
+	return 0;
 }
 
 //Thread for player input
@@ -533,7 +534,6 @@ void gamePlay()
 			spawnPowerups = false;
 			powerupTimer = 30;
 		}
-		
 	}
 }
 
