@@ -294,12 +294,12 @@ void *playerInput(void *params)
 						case 4:		//Up
 							//Move frog up
 							printf("\nFrog going up");
-							game.frog.y = game.frog.y + 1;	//Increments frog y value
+							game.frog.y = game.frog.y - 1;	//Decrements frog y value
 							game.movesRemaining = game.movesRemaining - 1;	//Decrements remaining moves
 							break;
 						case 5:		//Down
 							printf("\nFrog going down");
-							game.frog.y = game.frog.y - 1;	//Decrements frog y value
+							game.frog.y = game.frog.y + 1;	//Increments frog y value
 							game.movesRemaining = game.movesRemaining - 1;	//Decrements remaining moves
 							break;
 						case 6:		//Left
