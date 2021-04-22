@@ -727,7 +727,8 @@ void *draw(void *params)
 			else if(!game.stages[currentStage].isWater)
 			{
 				i = 0;
-				for (int y = 0; y < 640; y++)
+				for (int y = 
+				0; y < 640; y++)
 				{
 					for (int x = 0; x < 640; x++) 
 					{	
@@ -775,21 +776,24 @@ void *draw(void *params)
 			}
 
 			//Drawing powerup
-			i = 0;
-			for (int y = 0; y < 32; y++)
+			if(spawnPowerups)
 			{
-				for (int x = 0; x < 32; x++) 
-				{	
-					pixel->color = powerupPtr[i]; 
-					pixel->x = x + (game.powerup.x * 32);
-					pixel->y = y + (game.powerup.y * 32) + 68;
-					
-					drawPixel(pixel);
-					i++;			
+				i = 0;
+				for (int y = 0; y < 32; y++)
+				{
+					for (int x = 0; x < 32; x++) 
+					{	
+						pixel->color = powerupPtr[i]; 
+						pixel->x = x + (game.powerup.x * 32);
+						pixel->y = y + (game.powerup.y * 32) + 68;
+						
+						drawPixel(pixel);
+						i++;			
+					}
 				}
 			}
+
 			//Drawing extra lives
-			
 			for(int j = 0; j < game.extraLives; j++)
 			{
 				i = 0;
