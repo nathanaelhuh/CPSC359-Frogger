@@ -15,10 +15,25 @@
 #include "../resources/PauseMenu.c"
 #include "../resources/Background.c"
 #include "../resources/CarImage.c"
-//#include "../resources/FrogImage.c"
 #include "../resources/Frogger2.c"
 #include "../resources/LogImage(48x32).c"
 #include "../resources/TurtleImage(32x32).c"
+#include "../resources/0.c"
+#include "../resources/1.c"
+#include "../resources/2.c"
+#include "../resources/3.c"
+#include "../resources/4.c"
+#include "../resources/5.c"
+#include "../resources/6.c"
+#include "../resources/7.c"
+#include "../resources/8.c"
+#include "../resources/9.c"
+#include "../resources/Score.c"
+#include "../resources/Moves.c"
+#include "../resources/Time.c"
+#include "../resources/WinScreen.c"
+#include "../resources/LoseScreen.c"
+
 
 #define GPSEL0 0
 #define GPSET0 7
@@ -179,6 +194,9 @@ struct GameState {
 	int movesRemaining;
 	clock_t startTime;
 	bool gameOver;
+
+	bool won;
+	bool lost;
 	
 	struct Object frog;
 };
@@ -403,6 +421,8 @@ void initializeGame()
 	game.secondsRemaining = 999;
 	game.movesRemaining = 200;
 	game.gameOver = false;
+	game.won = false;
+	game.lost = false;
 	currentStage = 0;
 
 	game.frog.x = 10;
@@ -542,7 +562,20 @@ void *draw(void *params)
 	short int *logPtr=(short int *) Log.pixel_data;
 	short int *turtlePtr=(short int *) Turtle.pixel_data;
 	short int *frogPtr=(short int *) Frog.pixel_data;
-
+	short int *onePtr=(short int *) One.pixel_data;
+	short int *twoPtr=(short int *) Two.pixel_data;
+	short int *threePtr=(short int *) Three.pixel_data;
+	short int *fourPtr=(short int *) Four.pixel_data;
+	short int *fivePtr=(short int *) Five.pixel_data;
+	short int *sixPtr=(short int *) Six.pixel_data;
+	short int *sevenPtr=(short int *) Seven.pixel_data;
+	short int *eightPtr=(short int *) Eight.pixel_data;
+	short int *ninePtr=(short int *) Nine.pixel_data;
+	short int *scorePtr=(short int *) Score.pixel_data;
+	short int *movesPtr=(short int *) Moves.pixel_data;
+	short int *timePtr=(short int *) Time.pixel_data;
+	short int *winPtr=(short int *) Win.pixel_data;
+	short int *losePtr=(short int *) Lose.pixel_data;
 
 	Pixel *pixel;
 	pixel = malloc(sizeof(Pixel));
@@ -550,7 +583,7 @@ void *draw(void *params)
 
 	while(!quit)
 	{
-		while(!gameStart)
+		while(!gameStart && !game.gameOver)
 		{
 			i=0;
 			for (int y = 0; y < 640; y++)
@@ -599,7 +632,7 @@ void *draw(void *params)
 				}
 			}
 		}
-		while(gameStart && !paused)
+		while(gameStart && !paused && !game.gameOver)
 		{
 			delayMicroseconds(10000);
 			i = 0;
@@ -647,7 +680,7 @@ void *draw(void *params)
 			}
 			
 		}
-		while(paused)
+		while(paused && !game.gameOver)
 		{
 			i = 0;
 			for (int y = 0; y < 320; y++)
@@ -674,6 +707,25 @@ void *draw(void *params)
 						
 					drawPixel(pixel);
 					i++;		
+				}
+			}
+		}
+		while(game.gameOver)
+		{
+			i = 0;
+			for (int y = 0; y < 720; y++)
+			{
+				for (int x = 0; x < 720; x++) 
+				{	
+						if(game.won)
+							pixel->color = winPtr[i];
+						else if(game.lost)
+							pixel->color = losePtr[i];
+						pixel->x = x;
+						pixel->y = y;
+						
+						drawPixel(pixel);
+						i++;			
 				}
 			}
 		}
@@ -713,10 +765,12 @@ int collisionDetection()
 //Checks to see if game is over via frog reaching castle or running out of live/moves/time
 bool checkExit()
 {
-	if(currentStage == 3 && game.frog.y >= 20)
+	if(currentStage >= 3 && game.frog.y >= 20)
 	{
 		//WIN
         printf("\nCongrats you have won");
+		game.lost = false;
+		game.won = true;
 		game.gameOver = true;
 		return true;
 	}
@@ -724,6 +778,8 @@ bool checkExit()
 	{
 		//LOSE
         printf("\nSorry you lose");
+		game.won = false;
+		game.lost = true;
 		game.gameOver = true;
 		return true;
 	}
