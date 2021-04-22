@@ -816,6 +816,9 @@ void *draw(void *params)
 					}
 				}
 			}
+
+			
+			//Print score here
 			i = 0;
 			for (int y = 0; y < 32; y++)
 			{
@@ -829,8 +832,7 @@ void *draw(void *params)
 					i++;			
 				}
 			}
-			//Print score here
-			int temp = game.score;
+			int temp = game.score;		//Temp pointer for the number pointer
 			short int *tempPtr;
 			for(int j = 4; j > 0; j--)
 			{
@@ -875,7 +877,7 @@ void *draw(void *params)
 					for (int x = 0; x < 32; x++) 
 					{	
 						pixel->color = tempPtr[i];
-						pixel->x = x + 32*j + 270;
+						pixel->x = x + 32*j + 260;
 						pixel->y = y;
 						
 						drawPixel(pixel);
