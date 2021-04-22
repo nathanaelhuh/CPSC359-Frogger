@@ -512,7 +512,7 @@ void *draw(void *params)
 	
 	int *mainMenuPtr=(int *) Menu.pixel_data;	
 	int *pauseMenuPtr=(int *) Pause.pixel_data;	
-	int *selectionBarPtr=(int *) Selection.pixel_data;	
+	int *selectionBarPtr=(int *) SelectionBar.pixel_data;	
 	int *backgroundPtr=(int *) Background.pixel_data;	
 	int *carPtr=(int *) Car.pixel_data;
 	int *logPtr=(int *) Log.pixel_data;
