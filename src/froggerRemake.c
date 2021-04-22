@@ -496,7 +496,7 @@ void clear()
 }
 
 typedef struct {
-	int color;
+	short int color;
 	int x, y;
 } Pixel;
 
