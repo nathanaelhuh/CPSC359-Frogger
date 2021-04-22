@@ -221,6 +221,7 @@ void gamePlay();
 void *counter(void *params);
 void clear();
 void *draw(void *params);
+bool powerupCollision();
 
 struct GameState game;
 int currentStage;
