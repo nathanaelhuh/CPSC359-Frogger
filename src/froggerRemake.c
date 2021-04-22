@@ -214,7 +214,7 @@ void *draw(void *params);
 
 struct GameState game;
 int currentStage;
-bool gameStart, paused, quit, startHighlighted, playAgain;
+bool gameStart, paused, quit, startHighlighted, playAgain, waitOnPlayAgain;
 int menuSelect;
 
 int main(int argc, char **argv)
@@ -296,7 +296,7 @@ void *playerInput(void *params)
 			delayMicroseconds(1000000);
 		}
 		//Loop for gameplay and game not paused
-		while(gameStart && !paused)
+		while(gameStart && !paused && !game.gameOver)
 		{
 			printf("Please press a button\n");
 			unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
@@ -343,9 +343,8 @@ void *playerInput(void *params)
 			}
 			delayMicroseconds(100000);
 		}
-		while(paused)
+		while(paused && !game.gameOver)
 		{	
-			menuSelect = 0;
 			printf("Please press a button\n");
 			unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
 			for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
@@ -403,6 +402,19 @@ void *playerInput(void *params)
 			printf("\nPAUSED");
 			delayMicroseconds(100000);
 		}
+		while(game.gameOver)
+		{
+			unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
+			for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
+			{
+				int value = (code >> i) & 1;	//Gets bit of in i position
+				if(value == 0)	//If button is pushed
+				{
+					waitOnPlayAgain = false;
+					playAgain = true;
+				}
+			}
+		}
 	}
 	pthread_exit(NULL);
 }
@@ -424,6 +436,7 @@ void initializeGame()
 	game.won = false;
 	game.lost = false;
 	currentStage = 0;
+	menuSelect = 0;
 
 	game.frog.x = 10;
 	game.frog.y = 20;
@@ -468,6 +481,7 @@ void gamePlay()
 				delayMicroseconds(50000);
 			}
 		}
+		while(waitingOnPlayAgain);
 		if(playAgain == true)
 		{
 			gameStart = false;
@@ -602,9 +616,9 @@ void *draw(void *params)
 			if(startHighlighted)
 			{
 				i = 0;
-				for (int y = 0; y < 20; y++)
+				for (int y = 0; y < 10; y++)
 				{
-					for (int x = 0; x < 320; x++) 
+					for (int x = 0; x < 280; x++) 
 					{
 						pixel->color = selectionBarPtr[i]; 
 						pixel->x = x;
@@ -697,9 +711,9 @@ void *draw(void *params)
 			}
 			
 			i = 0;
-			for (int y = 0; y < 20; y++)
+			for (int y = 0; y < 10; y++)
 			{
-				for (int x = 0; x < 320; x++) 
+				for (int x = 0; x < 280; x++) 
 				{
 					pixel->color = selectionBarPtr[i]; 
 					pixel->x = x;
