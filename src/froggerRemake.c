@@ -1087,6 +1087,8 @@ void *draw(void *params)
 	free(pixel);
 	pixel = NULL;
 	munmap(framebufferstruct.fptr, framebufferstruct.screenSize);
+
+	pthread_exit(NULL);
 }
 
 // void drawPixel(Stage *stage)
@@ -1128,7 +1130,7 @@ bool powerupCollision()
 //Checks to see if game is over via frog reaching castle or running out of live/moves/time
 bool checkExit()
 {
-	if(currentStage >= 3 && game.frog.y >= 20)
+	if(currentStage >= 0 && game.frog.y >= 20)
 	{
 		//WIN
         printf("\nCongrats you have won");
