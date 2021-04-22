@@ -686,7 +686,7 @@ void *draw(void *params)
 						i++;		
 				}
 			}
-			if(game.stages[currentStage]->isWater)
+			if(game.stages[currentStage].isWater)
 			{
 				i = 0;
 				for (int y = 0; y < 640; y++)
@@ -703,7 +703,7 @@ void *draw(void *params)
 					}
 				}
 			}
-			else if(!game.stages[currentStage]->isWater)
+			else if(!game.stages[currentStage].isWater)
 			{
 				i = 0;
 				for (int y = 0; y < 640; y++)
