@@ -582,19 +582,19 @@ void *draw(void *params)
 			// Stage *stage;
 			// stage = malloc(sizeof(Stage));
 			int i=0;
-			unsigned int quarter,byte,word;
-			// for (int y = 0; y < 640; y++)
-			// {
-			// 	for (int x = 0; x < 640; x++) 
-			// 	{	
-			// 			pixel->color = backgroundPtr[i]; 
-			// 			pixel->x = x;
-			// 			pixel->y = y;
+			//unsigned int quarter,byte,word;
+			for (int y = 0; y < 640; y++)
+			{
+				for (int x = 0; x < 640; x++) 
+				{	
+						pixel->color = backgroundPtr[i]; 
+						pixel->x = x;
+						pixel->y = y;
 
-			// 			drawPixel(pixel);
-			// 			i++;		
-			// 	}
-			// }
+						drawPixel(pixel);
+						i++;		
+				}
+			}
 			for(int j = 0; j < 10; j++)	//OBJECTS
 			{
 				i=0;
