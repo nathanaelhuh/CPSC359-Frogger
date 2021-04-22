@@ -897,8 +897,6 @@ void *draw(void *params)
 				}
 			}
 			//Print score here
-			int temp = game.score;
-			short int *tempPtr;
 			for(int j = 3; j > 0; j--)
 			{
 				i = 0;
@@ -964,8 +962,6 @@ void *draw(void *params)
 				}
 			}
 			//Print score here
-			int temp = game.score;
-			short int *tempPtr;
 			for(int j = 3; j > 0; j--)
 			{
 				i = 0;
