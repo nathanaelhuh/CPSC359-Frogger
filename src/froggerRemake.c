@@ -680,7 +680,7 @@ void *draw(void *params)
 				{	
 						pixel->color = gameBoardPtr[i];
 						pixel->x = x;
-						pixel->y = y + 64;
+						pixel->y = y;
 
 						drawPixel(pixel);
 						i++;		
