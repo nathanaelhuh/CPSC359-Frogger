@@ -529,9 +529,9 @@ void *draw(void *params)
 		while(!gameStart)
 		{
 			int i=0;
-			for (int y = 0; y < 640; y++)
+			for (int y = 0; y < Menu.height; y++)
 			{
-				for (int x = 0; x < 640; x++) 
+				for (int x = 0; x < Menu.width; x++) 
 				{	
 						pixel->color = mainMenuPtr[i]; 
 						pixel->x = x;
@@ -544,9 +544,9 @@ void *draw(void *params)
 			i = 0;
 			if(startHighlighted)
 			{
-				for (int y = 0; y < 20; y++)
+				for (int y = 0; y < SelectionBar.height; y++)
 				{
-					for (int x = 0; x < 320; x++) 
+					for (int x = 0; x < SelectionBar.width; x++) 
 					{
 						pixel->color = selectionBarPtr[i]; 
 						pixel->x = x;
@@ -559,9 +559,9 @@ void *draw(void *params)
 			}
 			else
 			{
-				for (int y = 0; y < 20; y++)
+				for (int y = 0; y < SelectionBar.height; y++)
 				{
-					for (int x = 0; x < 320; x++) 
+					for (int x = 0; x < SelectionBar.width; x++) 
 					{
 						pixel->color = selectionBarPtr[i]; 
 						pixel->x = x + 320;
@@ -580,14 +580,14 @@ void *draw(void *params)
 			// stage = malloc(sizeof(Stage));
 			int i=0;
 			unsigned int quarter,byte,word;
-			for (int y = 0; y < 640; y++)
+			for (int y = 0; y < Background.height; y++)
 			{
-				for (int x = 0; x < 640; x++) 
+				for (int x = 0; x < Background.width; x++) 
 				{	
 						pixel->color = backgroundPtr[i]; 
 						pixel->x = x;
 						pixel->y = y;
-							
+
 						drawPixel(pixel);
 						i++;		
 				}
@@ -595,9 +595,9 @@ void *draw(void *params)
 			for(int j = 0; j < 10; j++)	//OBJECTS
 			{
 				i=0;
-				for (int y = 0; y < 32; y++)
+				for (int y = 0; y < Car.height; y++)
 				{
-					for (int x = 0; x < 32; x++) 
+					for (int x = 0; x < Car.width; x++) 
 					{	
 							pixel->color = carPtr[i]; 
 							pixel->x = x + (game.stages[currentStage].objects[j].x * 32);	//Update locations for objects
@@ -610,9 +610,9 @@ void *draw(void *params)
 			}
 			//Drawing frog
 			i=0;
-			for (int y = 0; y < 32; y++)
+			for (int y = 0; y < Frog.height; y++)
 			{
-				for (int x = 0; x < 32; x++) 
+				for (int x = 0; x < Frog.height; x++) 
 				{	
 						pixel->color = frogPtr[i]; 
 						pixel->x = x + (game.frog.x * 32);
