@@ -38,6 +38,7 @@
 #include "../resources/WaterBackground.c"
 #include "../resources/GameBoard.c"
 #include "../resources/Platform.c"
+#include "../resources/Powerup.c"
 
 
 #define GPSEL0 0
@@ -202,6 +203,8 @@ struct GameState {
 	clock_t startTime;
 	bool gameOver;
 
+	struct Object powerup;
+
 	bool won;
 	bool lost;
 	
@@ -221,7 +224,7 @@ void *draw(void *params);
 
 struct GameState game;
 int currentStage;
-bool gameStart, paused, quit, startHighlighted, playAgain, waitOnPlayAgain;
+bool gameStart, paused, quit, startHighlighted, playAgain, waitOnPlayAgain, spawnPowerups;
 int menuSelect;
 
 int main(int argc, char **argv)
@@ -232,6 +235,7 @@ int main(int argc, char **argv)
 	paused = false;
 	quit = false;
 	playAgain = false;
+	spawnPowerups = false;
 	pthread_t inputThread;	//Thread for input
 	pthread_t drawThread;	//Thread for graphics
 	pthread_attr_t attr;
@@ -526,6 +530,14 @@ void update()
 	printf("\nFrog y: %i Frog x: %i", game.frog.y, game.frog.x);
 	clock_t currentTime = clock();		//Gets current time in ticks
 	int timePassed = (currentTime - game.startTime) / CLOCKS_PER_SEC;	//Converts ticks into seconds
+	if(timePassed >= 30 && !spawnPowerups)
+	{
+		time_t t;
+		srand((unsigned) time(&t));
+		game.powerup.x = (rand() % 15) + 2;
+		game.powerup.y = (rand() % 15) + 2;
+		spawnPowerups = true;
+	}
 	game.secondsRemaining = 999 - timePassed;		//Seconds remaining calculation
 
 	int collide = collisionDetection();	
@@ -623,6 +635,7 @@ void *draw(void *params)
 	short int *losePtr=(short int *) Lose.pixel_data;
 	short int *gameBoardPtr=(short int *) GameBoard.pixel_data;
 	short int *waterPtr=(short int *) Water.pixel_data;
+	short int *powerupPtr=(short int *) Powerup.pixel_data;
 
 	Pixel *pixel;
 	pixel = malloc(sizeof(Pixel));
@@ -761,6 +774,20 @@ void *draw(void *params)
 				}
 			}
 
+			//Drawing powerup
+			i = 0;
+			for (int y = 0; y < 32; y++)
+			{
+				for (int x = 0; x < 32; x++) 
+				{	
+					pixel->color = powerupPtr[i]; 
+					pixel->x = x + (game.powerup.x * 32);
+					pixel->y = y + (game.powerup.y * 32) + 68;
+					
+					drawPixel(pixel);
+					i++;			
+				}
+			}
 			//Drawing extra lives
 			
 			for(int j = 0; j < game.extraLives; j++)
