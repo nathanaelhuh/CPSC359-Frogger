@@ -382,12 +382,16 @@ void *playerInput(void *params)
 							paused = false;
 							break;
 						case 4:		//Up
-							if(menuSelect > 0)
-								menuSelect = menuSelect - 1;
+							if(menuSelect == 1)
+								menuSelect = 0;
+							else if(menuSelect == 2)
+								menuSelect = 1;
 							break;
 						case 5:		//Down
-							if(menuSelect < 2)
-								menuSelect = menuSelect + 1;
+							if(menuSelect == 1)
+								menuSelect = 2;
+							else if(menuSelect == 0)
+								menuSelect = 1;
 							break;
 						case 6:		//Left
 							break;
@@ -398,7 +402,7 @@ void *playerInput(void *params)
 								paused = false;
 							else if(menuSelect == 1)
 							{
-								//Restart game
+								game.gameOver = true;
 							}
 							else
 								quit = true;
@@ -1134,7 +1138,7 @@ bool checkExit()
 		waitOnPlayAgain = true;
 		return true;
 	}
-	if(game.extraLives == 0 || game.movesRemaining == 0 || game.secondsRemaining == 0)
+	if(game.extraLives == 0 || game.movesRemaining == 0 || game.secondsRemaining == 0 || game.gameOver)
 	{
 		//LOSE
         printf("\nSorry you lose");
