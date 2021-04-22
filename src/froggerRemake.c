@@ -525,11 +525,11 @@ void update()
 
 	int collide = collisionDetection();	
 	//Adds platform velocity to frog
-	if(collide != -1 && game.stages->isWater)	//If stage is water then objects are platforms
+	if(collide != -1 && game.stages[currentStage].isWater)	//If stage is water then objects are platforms
 	{
 		game.frog.x = game.frog.x + game.stages[currentStage].objects[collide].velocity;
 	}
-	else if(collide != -1 && !game.stages->isWater)
+	else if((collide != -1 && !game.stages[currentStage].isWater) || (game.stages[currentStage].isWater && collide == -1))
 	{
 		game.extraLives = game.extraLives - 1;
 		game.frog.x = 10;
