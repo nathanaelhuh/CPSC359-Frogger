@@ -518,14 +518,14 @@ void *draw(void *params)
 
 	framebufferstruct = initFbInfo();
 	
-	int *backgroundPtr=(int *) Background.pixel_data;	
-	int *mainMenuPtr=(int *) Menu.pixel_data;	
-	int *pauseMenuPtr=(int *) Pause.pixel_data;	
-	int *selectionBarPtr=(int *) SelectionBar.pixel_data;	
-	int *carPtr=(int *) Car.pixel_data;
-	int *logPtr=(int *) Log.pixel_data;
-	int *turtlePtr=(int *) Turtle.pixel_data;
-	int *frogPtr=(int *) Frog.pixel_data;
+	short int *backgroundPtr=(short int *) Background.pixel_data;	
+	short int *mainMenuPtr=(short int *) Menu.pixel_data;	
+	short int *pauseMenuPtr=(short int *) Pause.pixel_data;	
+	short int *selectionBarPtr=(short int *) SelectionBar.pixel_data;	
+	short int *carPtr=(short int *) Car.pixel_data;
+	short int *logPtr=(short int *) Log.pixel_data;
+	short int *turtlePtr=(short int *) Turtle.pixel_data;
+	short int *frogPtr=(short int *) Frog.pixel_data;
 
 
 	Pixel *pixel;
