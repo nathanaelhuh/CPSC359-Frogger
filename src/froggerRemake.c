@@ -628,7 +628,19 @@ void *draw(void *params)
 		}
 		while(paused)
 		{
-			
+			int i = 0;
+			for (int y = 0; y < 320; y++)
+			{
+				for (int x = 0; x < 320; x++) 
+				{	
+						pixel->color = pauseMenuPtr[i]; 
+						pixel->x = x + 160;
+						pixel->y = y + 160;
+						
+						drawPixel(pixel);
+						i++;			
+				}
+			}
 		}
 	}
 	/* free pixel's allocated memory */
