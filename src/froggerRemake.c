@@ -270,7 +270,7 @@ void *playerInput(void *params)
 	while(!quit)
 	{
 		//Loop for menu selection
-		while(!gameStart)
+		while(!gameStart && !quit)
 		{
 			printf("Please press a button\n");
 			unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
@@ -309,7 +309,7 @@ void *playerInput(void *params)
 			delayMicroseconds(1000000);
 		}
 		//Loop for gameplay and game not paused
-		while(gameStart && !paused && !game.gameOver)
+		while(gameStart && !paused && !game.gameOver && !quit)
 		{
 			printf("Please press a button\n");
 			unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
@@ -358,7 +358,7 @@ void *playerInput(void *params)
 			delayMicroseconds(100000);
 		}
 		delayMicroseconds(10000);
-		while(paused && !game.gameOver)
+		while(paused && !game.gameOver && !quit)
 		{	
 			printf("Please press a button\n");
 			unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
@@ -513,7 +513,7 @@ void gamePlay()
 		printf("\nGamePlay");
 		initializeGame();
 		bool exit = false;
-		while(!exit)
+		while(!exit && !quit)
 		{
 			if(gameStart)
 			{
@@ -523,7 +523,7 @@ void gamePlay()
 			}
 		}
 		delayMicroseconds(10000);
-		while(waitOnPlayAgain);
+		while(waitOnPlayAgain && !quit);
 		if(playAgain == true)
 		{
 			gameStart = false;
@@ -663,7 +663,7 @@ void *draw(void *params)
 
 	while(!quit)
 	{
-		while(!gameStart && !game.gameOver)
+		while(!gameStart && !game.gameOver && !quit)
 		{
 			i=0;
 			for (int y = 0; y < 640; y++)
@@ -712,7 +712,7 @@ void *draw(void *params)
 				}
 			}
 		}
-		while(gameStart && !paused && !game.gameOver)
+		while(gameStart && !paused && !game.gameOver && !quit)
 		{
 			delayMicroseconds(10000);
 			i = 0;
@@ -1032,7 +1032,7 @@ void *draw(void *params)
 				}
 			}
 		}
-		while(paused && !game.gameOver)
+		while(paused && !game.gameOver && !quit)
 		{
 			i = 0;
 			for (int y = 0; y < 640; y++)
@@ -1063,7 +1063,7 @@ void *draw(void *params)
 			}
 		}
 		delayMicroseconds(10000);
-		while(waitOnPlayAgain)
+		while(waitOnPlayAgain && !quit)
 		{
 			i = 0;
 			for (int y = 0; y < 720; y++)
