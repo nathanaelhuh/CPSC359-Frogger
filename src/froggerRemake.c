@@ -1130,7 +1130,7 @@ bool powerupCollision()
 //Checks to see if game is over via frog reaching castle or running out of live/moves/time
 bool checkExit()
 {
-	if(currentStage >= 0 && game.frog.y >= 20)
+	if(currentStage >= 3 && game.frog.y <= 0)
 	{
 		//WIN
         printf("\nCongrats you have won");
