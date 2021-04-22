@@ -680,7 +680,7 @@ void *draw(void *params)
 				{	
 						pixel->color = gameBoardPtr[i];
 						pixel->x = x;
-						pixel->y = y;
+						pixel->y = y + 64;
 
 						drawPixel(pixel);
 						i++;		
@@ -694,9 +694,8 @@ void *draw(void *params)
 					for (int x = 0; x < 640; x++) 
 					{	
 							pixel->color = waterPtr[i];
-							pixel->color = gameBoardPtr[i];
 							pixel->x = x;
-							pixel->y = y;
+							pixel->y = y + 64;
 
 							drawPixel(pixel);
 							i++;		
@@ -711,9 +710,8 @@ void *draw(void *params)
 					for (int x = 0; x < 640; x++) 
 					{	
 							pixel->color = backgroundPtr[i];
-							pixel->color = gameBoardPtr[i];
 							pixel->x = x;
-							pixel->y = y;
+							pixel->y = y + 64;
 
 							drawPixel(pixel);
 							i++;		
@@ -729,7 +727,7 @@ void *draw(void *params)
 					{	
 							pixel->color = game.stages[currentStage].imagePtr[i]; 
 							pixel->x = x + (game.stages[currentStage].objects[j].x * 32) + game.stages[currentStage].objects[j].pixelPos;	//Update locations for objects
-							pixel->y = y + (game.stages[currentStage].objects[j].y * 32);
+							pixel->y = y + (game.stages[currentStage].objects[j].y * 32) + 64;
 							
 							drawPixel(pixel);
 							i++;						
@@ -744,7 +742,7 @@ void *draw(void *params)
 				{	
 						pixel->color = frogPtr[i]; 
 						pixel->x = x + (game.frog.x * 32);
-						pixel->y = y + (game.frog.y * 32);
+						pixel->y = y + (game.frog.y * 32) + 64;
 						
 						drawPixel(pixel);
 						i++;			
