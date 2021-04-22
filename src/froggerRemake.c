@@ -211,8 +211,8 @@ int main(int argc, char **argv)
 		printf("ERROR creating input thread, %d\n", tc);	//Error checking thread creation
 		exit(-1);
 	}
-	tc = pthread_create(&drawThread, &attr, draw, "1");		//Creating thread for drawing
-	if(tc)
+	int dc = pthread_create(&drawThread, &attr, draw, "1");		//Creating thread for drawing
+	if(dc)
 	{
 		printf("ERROR creating draw thread, %d\n", tc);		//Error checking thread creation
 		exit(-1);
