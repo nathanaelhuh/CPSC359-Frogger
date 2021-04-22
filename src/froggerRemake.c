@@ -500,7 +500,7 @@ typedef struct {
 } Stage;
 
 struct fbs framebufferstruct;
-void drawPixel(Stage *stage);
+void drawPixel(Pixel *pixel);
 
 void *draw(void *params)
 {
@@ -583,10 +583,19 @@ void *draw(void *params)
 	}
 }
 
-void drawPixel(Stage *stage)
-{
-	memcpy(framebufferstruct.fptr, stage, 1280*720*2);
+// void drawPixel(Stage *stage)
+// {
+// 	memcpy(framebufferstruct.fptr, stage, 1280*720*2);
+// }
+
+/* Draw a pixel */
+void drawPixel(Pixel *pixel){
+	long int location = (pixel->x +framebufferstruct.xOff) * (framebufferstruct.bits/8) +
+                       (pixel->y+framebufferstruct.yOff) * framebufferstruct.lineLength;
+	*((unsigned short int*)(framebufferstruct.fptr + location)) = pixel->color;
 }
+
+
 
 //Checks frog position against object positions for current stage, returns object position in list
 int collisionDetection()
