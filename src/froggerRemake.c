@@ -201,34 +201,37 @@ int main(int argc, char **argv)
 	paused = false;
 	quit = false;
 
-	pthread_t inputThread;
-	pthread_t drawThread;
+	pthread_t inputThread;	//Thread for input
+	pthread_t drawThread;	//Thread for graphics
 	pthread_attr_t attr;
 	pthread_attr_init(&attr);
-	int tc = pthread_create(&inputThread, &attr, playerInput, "1");
+	int tc = pthread_create(&inputThread, &attr, playerInput, "1");	//Creating thread for input
 	if(tc)
 	{
-		printf("ERROR creating input thread, %d\n", tc);
+		printf("ERROR creating input thread, %d\n", tc);	//Error checking thread creation
 		exit(-1);
 	}
-	tc = pthread_create(&drawThread, &attr, draw, "1");
+	tc = pthread_create(&drawThread, &attr, draw, "1");		//Creating thread for drawing
 	if(tc)
 	{
-		printf("ERROR creating draw thread, %d\n", tc);
+		printf("ERROR creating draw thread, %d\n", tc);		//Error checking thread creation
 		exit(-1);
 	}
 	gamePlay();
 }
 
-void *playerInput(void *params)
+//Thread for player input
+void *playerInput(void *params)	
 {
+	//GPIO initialization from project part 1
 	unsigned int *gpioPtr = getGPIOPtr();
 	initializeGPIO(gpioPtr);
 	unsigned short button;
 	bool startHighlighted = true;
-	//LOOP for menu selection
+	//Loop for program
 	while(!quit)
 	{
+		//Loop for menu selection
 		while(!gameStart)
 		{
 			printf("Please press a button\n");
@@ -250,23 +253,24 @@ void *playerInput(void *params)
 					}
 					if(button == 3)	//Start
 					{
-						gameStart = true;
+						gameStart = true;	//Starts game
 					}
 					if(button == 8)	//A
 					{
 						if(startHighlighted)
 						{
-							gameStart = true;
+							gameStart = true;	//Starts game
 						}
 						else
 						{
-							quit = true;
+							quit = true;	//Exits program
 						}
 					}
 				}
 			}
 			delayMicroseconds(1000000);
 		}
+		//Loop for gameplay and game not paused
 		while(gameStart && !paused)
 		{
 			printf("Please press a button\n");
@@ -287,25 +291,25 @@ void *playerInput(void *params)
 						case 4:		//Up
 							//Move frog up
 							printf("\nFrog going up");
-							game.frog.y = game.frog.y + 1;
-							game.movesRemaining = game.movesRemaining - 1;
+							game.frog.y = game.frog.y + 1;	//Increments frog y value
+							game.movesRemaining = game.movesRemaining - 1;	//Decrements remaining moves
 							break;
 						case 5:		//Down
 							printf("\nFrog going down");
-							game.frog.y = game.frog.y - 1;
-							game.movesRemaining = game.movesRemaining - 1;
+							game.frog.y = game.frog.y - 1;	//Decrements frog y value
+							game.movesRemaining = game.movesRemaining - 1;	//Decrements remaining moves
 							break;
 						case 6:		//Left
 							//Move frog left
 							printf("\nFrog going left");
-							game.frog.x = game.frog.x - 1;
-							game.movesRemaining = game.movesRemaining - 1;
+							game.frog.x = game.frog.x - 1;	//Increments frog x value
+							game.movesRemaining = game.movesRemaining - 1;	//Decrements remaining moves
 							break;
 						case 7:		//Right
 							//Move frog right
 							printf("\nFrog going right");
-							game.frog.x = game.frog.x + 1;
-							game.movesRemaining = game.movesRemaining - 1;
+							game.frog.x = game.frog.x + 1;	//Decrements frog x value
+							game.movesRemaining = game.movesRemaining - 1;	//Decrements remaining moves
 							break;
 						default:
 							break;
@@ -316,7 +320,7 @@ void *playerInput(void *params)
 		}
 		while(paused)
 		{	
-			//TODO: NEEDS SOME SORT OF PAUSE MENU SELECTION
+			int menuSelect = 0;
 			printf("Please press a button\n");
 			unsigned short code = readSNES(gpioPtr);	//Gets series of bits for buttons pushed
 			for(int i = 0; i < 12; i++)	//Iterates through bits sent from readSNES
@@ -339,14 +343,22 @@ void *playerInput(void *params)
 							paused = false;
 							break;
 						case 4:		//Up
+							if(menuSelect == 1)
+								menuSelect = menuSelect - 1;
 							break;
 						case 5:		//Down
+							if(menuSelect == 0)
+								menuSelect = menuSelect + 1;
 							break;
 						case 6:		//Left
 							break;
 						case 7:		//Right
 							break;
 						case 8:		//A
+							if(menuSelect == 0)
+								paused = false;
+							else
+								quit = true;
 							break;
 						case 9:		//X
 							break;
@@ -366,6 +378,8 @@ void *playerInput(void *params)
 	pthread_exit(NULL);
 }
 
+
+//Initializes variables needed for game
 void initializeGame()
 {
 	printf("\nInit game");
@@ -380,9 +394,10 @@ void initializeGame()
 	game.frog.x = 10;
 	game.frog.y = 0;
 
+	//Initializes game objects
 	for(int i = 0; i < 4; i++)
 	{
-		int temp = -1;
+		int temp = -1;	//Temp is for reversing velocities of objects
 		for(int j = 0; j < 10; j++)
 		{
 			for(int a = 0; a < 20; a++)
@@ -402,12 +417,13 @@ void initializeGame()
 	}
 }
 
+//Function for game
 void gamePlay()
 {
 	printf("\nGamePlay");
 	initializeGame();
 	bool exit = false;
-	while(!exit)
+	while(!exit && !quit)
 	{
 		if(gameStart)
 		{
@@ -424,26 +440,38 @@ void update()
 {
 	//printf("\nUpdate");
 	printf("\nFrog y: %i Frog x: %i", game.frog.y, game.frog.x);
-	clock_t currentTime = clock();
-	int timePassed = (currentTime - game.startTime) / CLOCKS_PER_SEC;
-	game.secondsRemaining = 999 - timePassed;
+	clock_t currentTime = clock();		//Gets current time in ticks
+	int timePassed = (currentTime - game.startTime) / CLOCKS_PER_SEC;	//Converts ticks into seconds
+	game.secondsRemaining = 999 - timePassed;		//Seconds remaining calculation
 
-	int collide = collisionDetection();
-	if(collide != 0 && game.stages->isWater)
+	int collide = collisionDetection();	
+	//Adds platform velocity to frog
+	if(collide != 0 && game.stages->isWater)	//If stage is water then objects are platforms
 	{
 		game.frog.x = game.frog.x + game.stages[currentStage].objects[collide].velocity;
 	}
 
+	//Adds velocity to objects, resets them when they hit the edge
 	for(int i = 0; i < 10; i++)
 	{
 		game.stages[currentStage].objects[collide].x = game.stages[currentStage].objects[collide].x + game.stages[currentStage].objects[collide].velocity;
+		if(game.stages[currentStage].objects[collide].x < 0)
+		{
+			game.stages[currentStage].objects[collide].x = 20;
+		}
+		if(game.stages[currentStage].objects[collide].x > 20)
+		{
+			game.stages[currentStage].objects[collide].x = 0;
+		}
 	}
+	//Bounds detection for frog
 	if(game.frog.x < 0 || game.frog.x > 20 || game.frog.y < 0)
 	{
 		game.extraLives = game.extraLives - 1;
 		game.frog.x = 10;
 		game.frog.y = 0;
 	}
+	//Checks if frog completed stage
 	if(game.frog.y >= 20)
 	{
 		currentStage = currentStage + 1;
@@ -451,6 +479,9 @@ void update()
         printf("\nGoing up a stage");
 	}
 	
+	//Score calculation
+	game.score = game.secondsRemaining + game.movesRemaining + (game.extraLives * 100);
+
 	printf("\n\nData\nTime remaining: %i\nLives: %i\nMoves: %i\n", game.secondsRemaining, game.extraLives, game.movesRemaining);
 }
 
@@ -483,12 +514,15 @@ void *draw(void *params)
 		}
 		while(gameStart && !paused)
 		{
-			int *backgroundPtr=(int *) Background.pixel_data;
+			//Pointers to images
+			int *backgroundPtr=(int *) Background.pixel_data;	
 			int *carPtr=(int *) Car.pixel_data;
 			int *logPtr=(int *) Log.pixel_data;
 			int *turtlePtr=(int *) Turtle.pixel_data;
 			int *frogPtr=(int *) Frog.pixel_data;
-			
+
+			Pixel *pixel;
+			pixel = malloc(sizeof(Pixel));
 
 			/* initialize a pixel */
 			Stage *stage;
@@ -499,11 +533,12 @@ void *draw(void *params)
 			{
 				for (int x = 0; x < 640; x++) 
 				{	
-						stage->pixels[x][y].color = backgroundPtr[i]; 
-						stage->pixels[x][y].x = x;
-						stage->pixels[x][y].y = y;
-						i++;
-						
+						pixel.color = backgroundPtr[i]; 
+						pixel.x = x;
+						pixel.y = y;
+							
+						drawPixel(pixel);
+						i++;		
 				}
 			}
 			for(int j = 0; j < 10; j++)	//OBJECTS
@@ -513,11 +548,12 @@ void *draw(void *params)
 				{
 					for (int x = 0; x < 32; x++) 
 					{	
-							stage->pixels[x + game.stages[currentStage].objects[j].x][y + game.stages[currentStage].objects[j].y].color = carPtr[i]; 
-							stage->pixels[x + game.stages[currentStage].objects[j].x][y + game.stages[currentStage].objects[j].y].x = x;	//Update locations for objects
-							stage->pixels[x + game.stages[currentStage].objects[j].x][y + game.stages[currentStage].objects[j].y].y = y;
-							i++;
+							pixel.color = carPtr[i]; 
+							pixel.x = x + (game.stages[currentStage].objects[j].x * 32);	//Update locations for objects
+							pixel.y = y + (game.stages[currentStage].objects[j].y * 32);
 							
+							drawPixel(pixel);
+							i++;s						
 					}
 				}
 			}
@@ -527,13 +563,14 @@ void *draw(void *params)
 			{
 				for (int x = 0; x < 32; x++) 
 				{	
-						stage->pixels[x + (game.frog.x * 32)][y + (game.frog.y * 32)].color = frogPtr[i]; 
-						stage->pixels[x + (game.frog.x * 32)][y + (game.frog.y * 32)].x = x + (game.frog.x * 32);
-						stage->pixels[x + (game.frog.x * 32)][y + (game.frog.y * 32)].y = y + (game.frog.y * 32);
+						pixel.color = frogPtr[i]; 
+						pixel.x = x + (game.frog.x * 32);
+						pixel.y = y + (game.frog.y * 32);
+						
+						drawPixel(pixel);
 						i++;			
 				}
 			}
-			drawPixel(stage);
 			/* free pixel's allocated memory */
 			free(stage);
 			stage = NULL;
@@ -551,8 +588,10 @@ void drawPixel(Stage *stage)
 	memcpy(framebufferstruct.fptr, stage, 1280*720*2);
 }
 
+//Checks frog position against object positions for current stage, returns object position in list
 int collisionDetection()
 {
+	//Checks object x with frog x and object y with frog y
 	for(int i = 0; i < 10; i++)
 	{
 		if(game.stages[currentStage].objects[i].x == game.frog.x && game.stages[currentStage].objects[i].y == game.frog.y)
@@ -560,6 +599,8 @@ int collisionDetection()
 	}
 	return 0;
 }
+
+//Checks to see if game is over via frog reaching castle or running out of live/moves/time
 bool checkExit()
 {
 	if(currentStage == 3 && game.frog.y >= 20)
