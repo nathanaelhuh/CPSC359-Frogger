@@ -601,6 +601,7 @@ void *draw(void *params)
 	short int *logPtr=(short int *) Log.pixel_data;
 	short int *turtlePtr=(short int *) Turtle.pixel_data;
 	short int *frogPtr=(short int *) Frog.pixel_data;
+	short int *zeroPtr=(short int *) Zero.pixel_data;
 	short int *onePtr=(short int *) One.pixel_data;
 	short int *twoPtr=(short int *) Two.pixel_data;
 	short int *threePtr=(short int *) Three.pixel_data;
@@ -793,7 +794,7 @@ void *draw(void *params)
 				switch(num)
 				{
 					case 0:
-						tempPtr = zeroPtr; 
+						tempPtr = zeroPtr;
 						break;
 					case 1:
 						tempPtr = onePtr; 
