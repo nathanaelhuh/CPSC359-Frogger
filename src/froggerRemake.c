@@ -184,6 +184,7 @@ struct Stage {
 	bool isWater;
 	struct Tile board[20][20];
 	struct Object objects[18];
+	short int *imagePtr;
 
 };
 struct GameState {
@@ -316,7 +317,8 @@ void *playerInput(void *params)
 						case 4:		//Up
 							//Move frog up
 							printf("\nFrog going up");
-							game.frog.y = game.frog.y - 1;	//Decrements frog y value
+							if(game.frog.y > 0)			//Bounds protection to prevent seg fault
+								game.frog.y = game.frog.y - 1;	//Decrements frog y value
 							game.movesRemaining = game.movesRemaining - 1;	//Decrements remaining moves
 							break;
 						case 5:		//Down
@@ -462,6 +464,24 @@ void initializeGame()
 		}
 		game.stages[i].isWater = i%2;
 	}
+	//Game Stage 0
+	game.stages[0].isWater = false;
+	game.stages[0].imagePtr = Car.pixel_data;
+
+
+	//Game Stage 1
+	game.stages[1].isWater = true;
+	game.stages[1].imagePtr = Turtle.pixel_data;
+
+	//Game Stage 2
+	game.stages[2].isWater = false;
+	game.stages[2].imagePtr = Car.pixel_data;
+
+
+	//Game Stage 3
+	game.stages[3].isWater = true;
+	game.stages[3].imagePtr = Turtle.pixel_data;
+
 }
 
 //Function for game
@@ -669,7 +689,7 @@ void *draw(void *params)
 				{
 					for (int x = 0; x < 32; x++) 
 					{	
-							pixel->color = carPtr[i]; 
+							pixel->color = game.stages[currentStage].imagePtr[i]; 
 							pixel->x = x + (game.stages[currentStage].objects[j].x * 32) + game.stages[currentStage].objects[j].pixelPos;	//Update locations for objects
 							pixel->y = y + (game.stages[currentStage].objects[j].y * 32);
 							
