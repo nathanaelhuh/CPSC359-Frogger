@@ -10,6 +10,9 @@
 #include "initGPIO.h"
 #include "framebuffer.h"
 
+#include "../resources/MainMenu.c"
+#include "../resources/SelectionBar.c"
+#include "../resources/PauseMenu.c"
 #include "../resources/Background.c"
 #include "../resources/CarImage.c"
 #include "../resources/FrogImage.c"
@@ -191,7 +194,7 @@ void *draw(void *params);
 
 struct GameState game;
 int currentStage;
-bool gameStart, paused, quit;
+bool gameStart, paused, quit, startHighlighted;
 
 int main(int argc, char **argv)
 {
@@ -227,7 +230,7 @@ void *playerInput(void *params)
 	unsigned int *gpioPtr = getGPIOPtr();
 	initializeGPIO(gpioPtr);
 	unsigned short button;
-	bool startHighlighted = true;
+	startHighlighted = true;
 	//Loop for program
 	while(!quit)
 	{
@@ -506,27 +509,73 @@ void *draw(void *params)
 {
 
 	framebufferstruct = initFbInfo();
+	
+	int *mainMenuPtr=(int *) Menu.pixel_data;	
+	int *pauseMenuPtr=(int *) Pause.pixel_data;	
+	int *selectionBarPtr=(int *) Selection.pixel_data;	
 	int *backgroundPtr=(int *) Background.pixel_data;	
 	int *carPtr=(int *) Car.pixel_data;
 	int *logPtr=(int *) Log.pixel_data;
 	int *turtlePtr=(int *) Turtle.pixel_data;
 	int *frogPtr=(int *) Frog.pixel_data;
 
+
+	Pixel *pixel;
+	pixel = malloc(sizeof(Pixel));
+
+
 	while(!quit)
 	{
 		while(!gameStart)
 		{
-
+			int i=0;
+			for (int y = 0; y < 640; y++)
+			{
+				for (int x = 0; x < 640; x++) 
+				{	
+						pixel->color = mainMenuPtr[i]; 
+						pixel->x = x;
+						pixel->y = y;
+							
+						drawPixel(pixel);
+						i++;		
+				}
+			}
+			i = 0;
+			if(startHighlighted)
+			{
+				for (int y = 0; y < 20; y++)
+				{
+					for (int x = 0; x < 320; x++) 
+					{
+						pixel->color = selectionBarPtr[i]; 
+						pixel->x = x;
+						pixel->y = y + 450;
+							
+						drawPixel(pixel);
+						i++;		
+					}
+				}
+			}
+			else
+			{
+				for (int y = 0; y < 20; y++)
+				{
+					for (int x = 0; x < 320; x++) 
+					{
+						pixel->color = selectionBarPtr[i]; 
+						pixel->x = x + 320;
+						pixel->y = y + 450;
+							
+						drawPixel(pixel);
+						i++;		
+					}
+				}
+			}
 		}
 		while(gameStart && !paused)
 		{
 			//Pointers to images
-			
-
-			Pixel *pixel;
-			pixel = malloc(sizeof(Pixel));
-
-			/* initialize a pixel */
 			// Stage *stage;
 			// stage = malloc(sizeof(Stage));
 			int i=0;
@@ -573,16 +622,17 @@ void *draw(void *params)
 						i++;			
 				}
 			}
-			/* free pixel's allocated memory */
-			free(pixel);
-			pixel = NULL;
-			munmap(framebufferstruct.fptr, framebufferstruct.screenSize);
+			
 		}
 		while(paused)
 		{
 			
 		}
 	}
+	/* free pixel's allocated memory */
+	free(pixel);
+	pixel = NULL;
+	munmap(framebufferstruct.fptr, framebufferstruct.screenSize);
 }
 
 // void drawPixel(Stage *stage)
