@@ -466,21 +466,21 @@ void initializeGame()
 	}
 	//Game Stage 0
 	game.stages[0].isWater = false;
-	game.stages[0].imagePtr = Car.pixel_data;
+	game.stages[0].imagePtr = (short int *) Car.pixel_data;
 
 
 	//Game Stage 1
 	game.stages[1].isWater = true;
-	game.stages[1].imagePtr = Turtle.pixel_data;
+	game.stages[1].imagePtr = (short int *) Turtle.pixel_data;
 
 	//Game Stage 2
 	game.stages[2].isWater = false;
-	game.stages[2].imagePtr = Car.pixel_data;
+	game.stages[2].imagePtr = (short int *) Car.pixel_data;
 
 
 	//Game Stage 3
 	game.stages[3].isWater = true;
-	game.stages[3].imagePtr = Turtle.pixel_data;
+	game.stages[3].imagePtr = (short int *) Turtle.pixel_data;
 
 }
 
