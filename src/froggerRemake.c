@@ -225,7 +225,7 @@ void *draw(void *params);
 struct GameState game;
 int currentStage;
 bool gameStart, paused, quit, startHighlighted, playAgain, waitOnPlayAgain, spawnPowerups;
-int menuSelect;
+int menuSelect, powerupTimer;
 
 int main(int argc, char **argv)
 {
@@ -236,6 +236,7 @@ int main(int argc, char **argv)
 	quit = false;
 	playAgain = false;
 	spawnPowerups = false;
+	powerupTimer = 30;
 	pthread_t inputThread;	//Thread for input
 	pthread_t drawThread;	//Thread for graphics
 	pthread_attr_t attr;
@@ -530,7 +531,7 @@ void update()
 	printf("\nFrog y: %i Frog x: %i", game.frog.y, game.frog.x);
 	clock_t currentTime = clock();		//Gets current time in ticks
 	int timePassed = (currentTime - game.startTime) / CLOCKS_PER_SEC;	//Converts ticks into seconds
-	if(timePassed >= 30 && !spawnPowerups)
+	if(timePassed >= powerupTimer && !spawnPowerups)
 	{
 		time_t t;
 		srand((unsigned) time(&t));
@@ -586,15 +587,18 @@ void update()
         printf("\nGoing up a stage");
 	}
 	
+	if(powerupCollision())
+	{
+		spawnPowerups = false;
+		powerupTimer = powerupTimer + powerupTimer;
+		game.powerup.x = 0;
+		game.powerup.y = 0;
+	}
+
 	//Score calculation
 	game.score = game.secondsRemaining + game.movesRemaining + (game.extraLives * 100);
 
 	printf("\n\nData\nTime remaining: %i\nLives: %i\nMoves: %i\n", game.secondsRemaining, game.extraLives, game.movesRemaining);
-}
-
-void clear()
-{
-
 }
 
 typedef struct {
@@ -961,6 +965,13 @@ int collisionDetection()
 		}
 	}
 	return -1;
+}
+
+bool powerupCollision()
+{
+	if(game.powerup.x == game.frog.x && game.powerup.y == game.frog.y)
+		return true;
+	return false;
 }
 
 //Checks to see if game is over via frog reaching castle or running out of live/moves/time
