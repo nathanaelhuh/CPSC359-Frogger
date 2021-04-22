@@ -875,7 +875,7 @@ void *draw(void *params)
 					for (int x = 0; x < 32; x++) 
 					{	
 						pixel->color = tempPtr[i];
-						pixel->x = x + 32*j + 280;
+						pixel->x = x + 32*j + 270;
 						pixel->y = y;
 						
 						drawPixel(pixel);
@@ -889,14 +889,15 @@ void *draw(void *params)
 				for (int x = 0; x < 100; x++) 
 				{	
 					pixel->color = timePtr[i]; 
-					pixel->x = x + 420;
+					pixel->x = x + 400;
 					pixel->y = y;
 					
 					drawPixel(pixel);
 					i++;			
 				}
 			}
-			//Print score here
+			//Print time here
+			temp = game.secondsRemaining;
 			for(int j = 3; j > 0; j--)
 			{
 				i = 0;
@@ -940,7 +941,7 @@ void *draw(void *params)
 					for (int x = 0; x < 32; x++) 
 					{	
 						pixel->color = tempPtr[i];
-						pixel->x = x + 32*j + 530;
+						pixel->x = x + 32*j + 510;
 						pixel->y = y;
 						
 						drawPixel(pixel);
@@ -961,7 +962,8 @@ void *draw(void *params)
 					i++;			
 				}
 			}
-			//Print score here
+			//Print moves here
+			temp = game.movesRemaining;
 			for(int j = 3; j > 0; j--)
 			{
 				i = 0;
