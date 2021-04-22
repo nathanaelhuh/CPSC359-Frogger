@@ -594,6 +594,7 @@ void update()
 		powerupTimer = powerupTimer + powerupTimer;
 		game.powerup.x = 0;
 		game.powerup.y = 0;
+		game.movesRemaining = game.movesRemaining + 100;
 	}
 
 	//Score calculation
@@ -876,6 +877,140 @@ void *draw(void *params)
 						pixel->color = tempPtr[i];
 						pixel->x = x + 32*j + 280;
 						pixel->y = y;
+						
+						drawPixel(pixel);
+						i++;			
+					}
+				}
+			}
+			i = 0;
+			for (int y = 0; y < 32; y++)
+			{
+				for (int x = 0; x < 100; x++) 
+				{	
+					pixel->color = timePtr[i]; 
+					pixel->x = x + 420;
+					pixel->y = y;
+					
+					drawPixel(pixel);
+					i++;			
+				}
+			}
+			//Print score here
+			int temp = game.score;
+			short int *tempPtr;
+			for(int j = 3; j > 0; j--)
+			{
+				i = 0;
+				int num = temp % 10;
+				switch(num)
+				{
+					case 0:
+						tempPtr = zeroPtr;
+						break;
+					case 1:
+						tempPtr = onePtr; 
+						break;
+					case 2:
+						tempPtr = twoPtr; 
+						break;
+					case 3:
+						tempPtr = threePtr; 
+						break;
+					case 4:
+						tempPtr = fourPtr; 
+						break;
+					case 5:
+						tempPtr = fivePtr; 
+						break;
+					case 6:
+						tempPtr = sixPtr; 
+						break;
+					case 7:
+						tempPtr = sevenPtr; 
+						break;
+					case 8:
+						tempPtr = eightPtr; 
+						break;
+					case 9:
+						tempPtr = ninePtr; 
+						break;
+				}
+				temp = temp / 10;
+				for (int y = 0; y < 32; y++)
+				{
+					for (int x = 0; x < 32; x++) 
+					{	
+						pixel->color = tempPtr[i];
+						pixel->x = x + 32*j + 530;
+						pixel->y = y;
+						
+						drawPixel(pixel);
+						i++;			
+					}
+				}
+			}
+			i = 0;
+			for (int y = 0; y < 32; y++)
+			{
+				for (int x = 0; x < 120; x++) 
+				{	
+					pixel->color = movesPtr[i]; 
+					pixel->x = x;
+					pixel->y = y + 32;
+					
+					drawPixel(pixel);
+					i++;			
+				}
+			}
+			//Print score here
+			int temp = game.score;
+			short int *tempPtr;
+			for(int j = 3; j > 0; j--)
+			{
+				i = 0;
+				int num = temp % 10;
+				switch(num)
+				{
+					case 0:
+						tempPtr = zeroPtr;
+						break;
+					case 1:
+						tempPtr = onePtr; 
+						break;
+					case 2:
+						tempPtr = twoPtr; 
+						break;
+					case 3:
+						tempPtr = threePtr; 
+						break;
+					case 4:
+						tempPtr = fourPtr; 
+						break;
+					case 5:
+						tempPtr = fivePtr; 
+						break;
+					case 6:
+						tempPtr = sixPtr; 
+						break;
+					case 7:
+						tempPtr = sevenPtr; 
+						break;
+					case 8:
+						tempPtr = eightPtr; 
+						break;
+					case 9:
+						tempPtr = ninePtr; 
+						break;
+				}
+				temp = temp / 10;
+				for (int y = 0; y < 32; y++)
+				{
+					for (int x = 0; x < 32; x++) 
+					{	
+						pixel->color = tempPtr[i];
+						pixel->x = x + 32*j + 130;
+						pixel->y = y + 32;
 						
 						drawPixel(pixel);
 						i++;			
