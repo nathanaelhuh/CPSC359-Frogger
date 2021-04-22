@@ -227,7 +227,6 @@ int main(int argc, char **argv)
 void *playerInput(void *params)	
 {
 	
-			delayMicroseconds(100000);
 	//GPIO initialization from project part 1
 	unsigned int *gpioPtr = getGPIOPtr();
 	initializeGPIO(gpioPtr);
@@ -425,7 +424,6 @@ void initializeGame()
 //Function for game
 void gamePlay()
 {
-			delayMicroseconds(100000);
 	printf("\nGamePlay");
 	initializeGame();
 	bool exit = false;
@@ -444,7 +442,6 @@ void gamePlay()
 
 void update()
 {
-			delayMicroseconds(100000);
 	//printf("\nUpdate");
 	printf("\nFrog y: %i Frog x: %i", game.frog.y, game.frog.x);
 	clock_t currentTime = clock();		//Gets current time in ticks
@@ -511,7 +508,6 @@ void drawPixel(Pixel *pixel);
 
 void *draw(void *params)
 {
-			delayMicroseconds(100000);
 
 	framebufferstruct = initFbInfo();
 	
@@ -587,18 +583,18 @@ void *draw(void *params)
 			// stage = malloc(sizeof(Stage));
 			int i=0;
 			unsigned int quarter,byte,word;
-			for (int y = 0; y < 640; y++)
-			{
-				for (int x = 0; x < 640; x++) 
-				{	
-						pixel->color = backgroundPtr[i]; 
-						pixel->x = x;
-						pixel->y = y;
+			// for (int y = 0; y < 640; y++)
+			// {
+			// 	for (int x = 0; x < 640; x++) 
+			// 	{	
+			// 			pixel->color = backgroundPtr[i]; 
+			// 			pixel->x = x;
+			// 			pixel->y = y;
 
-						drawPixel(pixel);
-						i++;		
-				}
-			}
+			// 			drawPixel(pixel);
+			// 			i++;		
+			// 	}
+			// }
 			for(int j = 0; j < 10; j++)	//OBJECTS
 			{
 				i=0;
