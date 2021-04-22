@@ -357,6 +357,7 @@ void *playerInput(void *params)
 			}
 			delayMicroseconds(100000);
 		}
+		delayMicroseconds(10000);
 		while(paused && !game.gameOver)
 		{	
 			printf("Please press a button\n");
@@ -517,6 +518,7 @@ void gamePlay()
 				delayMicroseconds(1000);
 			}
 		}
+		delayMicroseconds(10000);
 		while(waitOnPlayAgain);
 		if(playAgain == true)
 		{
@@ -1056,6 +1058,7 @@ void *draw(void *params)
 				}
 			}
 		}
+		delayMicroseconds(10000);
 		while(waitOnPlayAgain)
 		{
 			i = 0;
@@ -1128,6 +1131,7 @@ bool checkExit()
 		game.lost = false;
 		game.won = true;
 		game.gameOver = true;
+		waitOnPlayAgain = true;
 		return true;
 	}
 	if(game.extraLives == 0 || game.movesRemaining == 0 || game.secondsRemaining == 0)
@@ -1137,6 +1141,7 @@ bool checkExit()
 		game.won = false;
 		game.lost = true;
 		game.gameOver = true;
+		waitOnPlayAgain = true;
 		return true;
 	}
 	return false;
