@@ -183,6 +183,7 @@ struct Object {
 	bool isPlatform;
 	int velocity;
 	int pixelPos;
+	int length;
 };
 
 struct Stage {
@@ -465,6 +466,7 @@ void initializeGame()
 			game.stages[i].objects[j].x = 0;
 			game.stages[i].objects[j].y = j + 2;
 			game.stages[i].objects[j].velocity = temp*rand()%3;		//TODO: Might change object velocities later
+			game.stages[i].objects[j].length = 1;
 			temp = -temp;
 		}
 		game.stages[i].isWater = i%2;
@@ -477,6 +479,8 @@ void initializeGame()
 	//Game Stage 1
 	game.stages[1].isWater = true;
 	game.stages[1].imagePtr = (short int *) Turtle.pixel_data;
+	for(int j = 0; j < 18; j++)
+		game.stages[1].objects[j].length = 3;
 
 	//Game Stage 2
 	game.stages[2].isWater = false;
@@ -486,7 +490,8 @@ void initializeGame()
 	//Game Stage 3
 	game.stages[3].isWater = true;
 	game.stages[3].imagePtr = (short int *) Platform.pixel_data;
-
+	for(int j = 0; j < 18; j++)
+		game.stages[3].objects[j].length = 3;
 }
 
 //Function for game
@@ -724,17 +729,20 @@ void *draw(void *params)
 			}
 			for(int j = 0; j < 18; j++)	//OBJECTS
 			{
-				i = 0;
-				for (int y = 0; y < 32; y++)
+				for(int k = 0; k < game.stages.[currentStage].objects[j].length; k++)
 				{
-					for (int x = 0; x < 32; x++) 
-					{	
-						pixel->color = game.stages[currentStage].imagePtr[i]; 
-						pixel->x = x + (game.stages[currentStage].objects[j].x * 32) + game.stages[currentStage].objects[j].pixelPos;	//Update locations for objects
-						pixel->y = y + (game.stages[currentStage].objects[j].y * 32) + 68;
-						
-						drawPixel(pixel);
-						i++;						
+					i = 0;
+					for (int y = 0; y < 32; y++)
+					{
+						for (int x = 0; x < 32; x++) 
+						{	
+							pixel->color = game.stages[currentStage].imagePtr[i]; 
+							pixel->x = x + (game.stages[currentStage].objects[j].x * 32) + game.stages[currentStage].objects[j].pixelPos + k*32;	//Update locations for objects
+							pixel->y = y + (game.stages[currentStage].objects[j].y * 32) + 68;
+							
+							drawPixel(pixel);
+							i++;						
+						}
 					}
 				}
 			}
@@ -915,8 +923,11 @@ int collisionDetection()
 	//Checks object x with frog x and object y with frog y
 	for(int i = 0; i < 18; i++)
 	{
-		if(game.stages[currentStage].objects[i].x == game.frog.x && game.stages[currentStage].objects[i].y == game.frog.y)
-			return i;
+		for(int j = 0; j < game.stages[currentStage].objects[i].length; j++)
+		{
+			if(game.stages[currentStage].objects[i].x == game.frog.x && game.stages[currentStage].objects[i].y == game.frog.y)
+				return i;
+		}
 	}
 	return -1;
 }
