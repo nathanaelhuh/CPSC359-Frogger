@@ -793,34 +793,34 @@ void *draw(void *params)
 				switch(num)
 				{
 					case 0:
-						tempPtr = zeroPtr[i]; 
+						tempPtr = zeroPtr; 
 						break;
 					case 1:
-						tempPtr = onePtr[i]; 
+						tempPtr = onePtr; 
 						break;
 					case 2:
-						tempPtr = twoPtr[i]; 
+						tempPtr = twoPtr; 
 						break;
 					case 3:
-						tempPtr = threePtr[i]; 
+						tempPtr = threePtr; 
 						break;
 					case 4:
-						tempPtr = fourPtr[i]; 
+						tempPtr = fourPtr; 
 						break;
 					case 5:
-						tempPtr = fivePtr[i]; 
+						tempPtr = fivePtr; 
 						break;
 					case 6:
-						tempPtr = sixPtr[i]; 
+						tempPtr = sixPtr; 
 						break;
 					case 7:
-						tempPtr = sevenPtr[i]; 
+						tempPtr = sevenPtr; 
 						break;
 					case 8:
-						tempPtr = eightPtr[i]; 
+						tempPtr = eightPtr; 
 						break;
 					case 9:
-						tempPtr = ninePtr[i]; 
+						tempPtr = ninePtr; 
 						break;
 				}
 				temp = temp / 10;
