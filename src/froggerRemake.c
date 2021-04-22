@@ -662,7 +662,7 @@ void *draw(void *params)
 						i++;		
 				}
 			}
-			for(int j = 0; j < 10; j++)	//OBJECTS
+			for(int j = 0; j < 18; j++)	//OBJECTS
 			{
 				i = 0;
 				for (int y = 0; y < 32; y++)
@@ -768,7 +768,7 @@ void drawPixel(Pixel *pixel){
 int collisionDetection()
 {
 	//Checks object x with frog x and object y with frog y
-	for(int i = 0; i < 10; i++)
+	for(int i = 0; i < 18; i++)
 	{
 		if(game.stages[currentStage].objects[i].x == game.frog.x && game.stages[currentStage].objects[i].y == game.frog.y)
 			return i;
