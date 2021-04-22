@@ -511,7 +511,7 @@ void *draw(void *params)
 	int *logPtr=(int *) Log.pixel_data;
 	int *turtlePtr=(int *) Turtle.pixel_data;
 	int *frogPtr=(int *) Frog.pixel_data;
-	
+
 	while(!quit)
 	{
 		while(!gameStart)
@@ -527,8 +527,8 @@ void *draw(void *params)
 			pixel = malloc(sizeof(Pixel));
 
 			/* initialize a pixel */
-			Stage *stage;
-			stage = malloc(sizeof(Stage));
+			// Stage *stage;
+			// stage = malloc(sizeof(Stage));
 			int i=0;
 			unsigned int quarter,byte,word;
 			for (int y = 0; y < 640; y++)
