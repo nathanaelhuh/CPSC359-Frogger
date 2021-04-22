@@ -15,7 +15,8 @@
 #include "../resources/PauseMenu.c"
 #include "../resources/Background.c"
 #include "../resources/CarImage.c"
-#include "../resources/FrogImage.c"
+//#include "../resources/FrogImage.c"
+#include "../resources/Frogger2.c"
 #include "../resources/LogImage(48x32).c"
 #include "../resources/TurtleImage(32x32).c"
 
