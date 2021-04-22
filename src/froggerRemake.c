@@ -717,9 +717,9 @@ void *draw(void *params)
 		while(paused && !game.gameOver)
 		{
 			i = 0;
-			for (int y = 0; y < 320; y++)
+			for (int y = 0; y < 640; y++)
 			{
-				for (int x = 0; x < 320; x++) 
+				for (int x = 0; x < 640; x++) 
 				{	
 						pixel->color = pauseMenuPtr[i]; 
 						pixel->x = x + 160;
@@ -736,7 +736,7 @@ void *draw(void *params)
 				for (int x = 0; x < 280; x++) 
 				{
 					pixel->color = selectionBarPtr[i]; 
-					pixel->x = x;
+					pixel->x = x + 160;
 					pixel->y = y + 200 + (200*menuSelect);
 						
 					drawPixel(pixel);
