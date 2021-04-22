@@ -588,7 +588,7 @@ void *draw(void *params)
 			{
 				for (int x = 0; x < 640; x++) 
 				{	
-						//pixel->color = backgroundPtr[i];
+						pixel->color = backgroundPtr[i];
 						pixel->x = x;
 						pixel->y = y;
 
