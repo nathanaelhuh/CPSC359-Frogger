@@ -463,7 +463,7 @@ void initializeGame()
                 }
 			}
 			game.stages[i].objects[j].x = 0;
-			game.stages[i].objects[j].y = j + 1;
+			game.stages[i].objects[j].y = j + 2;
 			game.stages[i].objects[j].velocity = temp*rand()%3;		//TODO: Might change object velocities later
 			temp = -temp;
 		}
