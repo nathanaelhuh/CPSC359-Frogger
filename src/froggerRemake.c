@@ -681,12 +681,12 @@ void *draw(void *params)
 			{
 				for (int x = 0; x < 720; x++) 
 				{	
-						pixel->color = gameBoardPtr[i];
-						pixel->x = x;
-						pixel->y = y;
+					pixel->color = gameBoardPtr[i];
+					pixel->x = x;
+					pixel->y = y;
 
-						drawPixel(pixel);
-						i++;		
+					drawPixel(pixel);
+					i++;		
 				}
 			}
 			if(game.stages[currentStage].isWater)
@@ -696,12 +696,12 @@ void *draw(void *params)
 				{
 					for (int x = 0; x < 640; x++) 
 					{	
-							pixel->color = waterPtr[i];
-							pixel->x = x;
-							pixel->y = y + 68;
+						pixel->color = waterPtr[i];
+						pixel->x = x;
+						pixel->y = y + 68;
 
-							drawPixel(pixel);
-							i++;		
+						drawPixel(pixel);
+						i++;		
 					}
 				}
 			}
@@ -712,12 +712,12 @@ void *draw(void *params)
 				{
 					for (int x = 0; x < 640; x++) 
 					{	
-							pixel->color = backgroundPtr[i];
-							pixel->x = x;
-							pixel->y = y + 68;
+						pixel->color = backgroundPtr[i];
+						pixel->x = x;
+						pixel->y = y + 68;
 
-							drawPixel(pixel);
-							i++;		
+						drawPixel(pixel);
+						i++;		
 					}
 				}
 			}
@@ -728,12 +728,12 @@ void *draw(void *params)
 				{
 					for (int x = 0; x < 32; x++) 
 					{	
-							pixel->color = game.stages[currentStage].imagePtr[i]; 
-							pixel->x = x + (game.stages[currentStage].objects[j].x * 32) + game.stages[currentStage].objects[j].pixelPos;	//Update locations for objects
-							pixel->y = y + (game.stages[currentStage].objects[j].y * 32) + 68;
-							
-							drawPixel(pixel);
-							i++;						
+						pixel->color = game.stages[currentStage].imagePtr[i]; 
+						pixel->x = x + (game.stages[currentStage].objects[j].x * 32) + game.stages[currentStage].objects[j].pixelPos;	//Update locations for objects
+						pixel->y = y + (game.stages[currentStage].objects[j].y * 32) + 68;
+						
+						drawPixel(pixel);
+						i++;						
 					}
 				}
 			}
@@ -743,47 +743,100 @@ void *draw(void *params)
 			{
 				for (int x = 0; x < 32; x++) 
 				{	
-						pixel->color = frogPtr[i]; 
-						pixel->x = x + (game.frog.x * 32);
-						pixel->y = y + (game.frog.y * 32) + 68;
-						
-						drawPixel(pixel);
-						i++;			
+					pixel->color = frogPtr[i]; 
+					pixel->x = x + (game.frog.x * 32);
+					pixel->y = y + (game.frog.y * 32) + 68;
+					
+					drawPixel(pixel);
+					i++;			
 				}
 			}
 
-
-			i = 0;
+			//Drawing extra lives
+			
 			for(int j = 0; j < game.extraLives; j++)
 			{
+				i = 0;
 				for (int y = 0; y < 32; y++)
 				{
 					for (int x = 0; x < 32; x++) 
 					{	
-							pixel->color = frogPtr[i]; 
-							pixel->x = x + 32*j;
-							pixel->y = y;
-							
-							drawPixel(pixel);
-							i++;			
-					}
-				}
-			}
-
-			for (int y = 0; y < 32; y++)
-			{
-				for (int x = 0; x < 110; x++) 
-				{	
-						pixel->color = scorePtr[i]; 
-						pixel->x = x + 160;
+						pixel->color = frogPtr[i]; 
+						pixel->x = x + 32*j;
 						pixel->y = y;
 						
 						drawPixel(pixel);
 						i++;			
+					}
+				}
+			}
+			i = 0;
+			for (int y = 0; y < 32; y++)
+			{
+				for (int x = 0; x < 110; x++) 
+				{	
+					pixel->color = scorePtr[i]; 
+					pixel->x = x + 160;
+					pixel->y = y;
+					
+					drawPixel(pixel);
+					i++;			
 				}
 			}
 			//Print score here
-			
+			int temp = game.score;
+			short int *tempPtr;
+			for(int j = 4; j > 0; j--)
+			{
+				i = 0;
+				int num = temp % 10;
+				switch(num)
+				{
+					case 0:
+						tempPtr = zeroPtr[i]; 
+						break;
+					case 1:
+						tempPtr = onePtr[i]; 
+						break;
+					case 2:
+						tempPtr = twoPtr[i]; 
+						break;
+					case 3:
+						tempPtr = threePtr[i]; 
+						break;
+					case 4:
+						tempPtr = fourPtr[i]; 
+						break;
+					case 5:
+						tempPtr = fivePtr[i]; 
+						break;
+					case 6:
+						tempPtr = sixPtr[i]; 
+						break;
+					case 7:
+						tempPtr = sevenPtr[i]; 
+						break;
+					case 8:
+						tempPtr = eightPtr[i]; 
+						break;
+					case 9:
+						tempPtr = ninePtr[i]; 
+						break;
+				}
+				temp = temp / 10;
+				for (int y = 0; y < 32; y++)
+				{
+					for (int x = 0; x < 32; x++) 
+					{	
+						pixel->color = tempPtr[i];
+						pixel->x = x + 32*j + 280;
+						pixel->y = y;
+						
+						drawPixel(pixel);
+						i++;			
+					}
+				}
+			}
 		}
 		while(paused && !game.gameOver)
 		{
