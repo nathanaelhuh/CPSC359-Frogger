@@ -574,8 +574,8 @@ void *draw(void *params)
 				}
 			}
 			/* free pixel's allocated memory */
-			free(stage);
-			stage = NULL;
+			free(pixel);
+			pixel = NULL;
 			munmap(framebufferstruct.fptr, framebufferstruct.screenSize);
 		}
 		while(paused)
