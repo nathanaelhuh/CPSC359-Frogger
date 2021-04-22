@@ -533,9 +533,9 @@ void *draw(void *params)
 			{
 				for (int x = 0; x < 640; x++) 
 				{	
-						pixel.color = backgroundPtr[i]; 
-						pixel.x = x;
-						pixel.y = y;
+						pixel->color = backgroundPtr[i]; 
+						pixel->x = x;
+						pixel->y = y;
 							
 						drawPixel(pixel);
 						i++;		
@@ -548,12 +548,12 @@ void *draw(void *params)
 				{
 					for (int x = 0; x < 32; x++) 
 					{	
-							pixel.color = carPtr[i]; 
-							pixel.x = x + (game.stages[currentStage].objects[j].x * 32);	//Update locations for objects
-							pixel.y = y + (game.stages[currentStage].objects[j].y * 32);
+							pixel->color = carPtr[i]; 
+							pixel->x = x + (game.stages[currentStage].objects[j].x * 32);	//Update locations for objects
+							pixel->y = y + (game.stages[currentStage].objects[j].y * 32);
 							
 							drawPixel(pixel);
-							i++;s						
+							i++;						
 					}
 				}
 			}
@@ -563,9 +563,9 @@ void *draw(void *params)
 			{
 				for (int x = 0; x < 32; x++) 
 				{	
-						pixel.color = frogPtr[i]; 
-						pixel.x = x + (game.frog.x * 32);
-						pixel.y = y + (game.frog.y * 32);
+						pixel->color = frogPtr[i]; 
+						pixel->x = x + (game.frog.x * 32);
+						pixel->y = y + (game.frog.y * 32);
 						
 						drawPixel(pixel);
 						i++;			
