@@ -545,9 +545,9 @@ void *draw(void *params)
 			if(startHighlighted)
 			{
 				i = 0;
-				for (int y = 0; y < 10; y++)
+				for (int y = 0; y < 20; y++)
 				{
-					for (int x = 0; x < 280; x++) 
+					for (int x = 0; x < 320; x++) 
 					{
 						pixel->color = selectionBarPtr[i]; 
 						pixel->x = x;
