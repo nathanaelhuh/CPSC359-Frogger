@@ -15,8 +15,10 @@
 #include "../resources/PauseMenu.c"
 #include "../resources/Background.c"
 #include "../resources/CarImage.c"
+#include "../resources/Car2.c"
 #include "../resources/Frogger2.c"
-#include "../resources/LogImage(48x32).c"
+// #include "../resources/LogImage(48x32).c"
+#include "../resources/Log.c"
 #include "../resources/TurtleImage(32x32).c"
 #include "../resources/0.c"
 #include "../resources/1.c"
@@ -35,6 +37,7 @@
 #include "../resources/LoseScreen.c"
 #include "../resources/WaterBackground.c"
 #include "../resources/GameBoard.c"
+#include "../resources/Platform.c"
 
 
 #define GPSEL0 0
@@ -477,12 +480,12 @@ void initializeGame()
 
 	//Game Stage 2
 	game.stages[2].isWater = false;
-	game.stages[2].imagePtr = (short int *) Car.pixel_data;
+	game.stages[2].imagePtr = (short int *) Car2.pixel_data;
 
 
 	//Game Stage 3
 	game.stages[3].isWater = true;
-	game.stages[3].imagePtr = (short int *) Turtle.pixel_data;
+	game.stages[3].imagePtr = (short int *) Platform.pixel_data;
 
 }
 
@@ -695,7 +698,7 @@ void *draw(void *params)
 					{	
 							pixel->color = waterPtr[i];
 							pixel->x = x;
-							pixel->y = y + 64;
+							pixel->y = y + 68;
 
 							drawPixel(pixel);
 							i++;		
@@ -711,7 +714,7 @@ void *draw(void *params)
 					{	
 							pixel->color = backgroundPtr[i];
 							pixel->x = x;
-							pixel->y = y + 64;
+							pixel->y = y + 68;
 
 							drawPixel(pixel);
 							i++;		
@@ -727,7 +730,7 @@ void *draw(void *params)
 					{	
 							pixel->color = game.stages[currentStage].imagePtr[i]; 
 							pixel->x = x + (game.stages[currentStage].objects[j].x * 32) + game.stages[currentStage].objects[j].pixelPos;	//Update locations for objects
-							pixel->y = y + (game.stages[currentStage].objects[j].y * 32) + 64;
+							pixel->y = y + (game.stages[currentStage].objects[j].y * 32) + 68;
 							
 							drawPixel(pixel);
 							i++;						
@@ -742,12 +745,44 @@ void *draw(void *params)
 				{	
 						pixel->color = frogPtr[i]; 
 						pixel->x = x + (game.frog.x * 32);
-						pixel->y = y + (game.frog.y * 32) + 64;
+						pixel->y = y + (game.frog.y * 32) + 68;
 						
 						drawPixel(pixel);
 						i++;			
 				}
 			}
+
+
+			i = 0;
+			for(int j = 0; j < game.extraLives; j++)
+			{
+				for (int y = 0; y < 32; y++)
+				{
+					for (int x = 0; x < 32; x++) 
+					{	
+							pixel->color = frogPtr[i]; 
+							pixel->x = x + 32*j;
+							pixel->y = y;
+							
+							drawPixel(pixel);
+							i++;			
+					}
+				}
+			}
+
+			for (int y = 0; y < 32; y++)
+			{
+				for (int x = 0; x < 110; x++) 
+				{	
+						pixel->color = scorePtr[i]; 
+						pixel->x = x + 160;
+						pixel->y = y;
+						
+						drawPixel(pixel);
+						i++;			
+				}
+			}
+			//Print score here
 			
 		}
 		while(paused && !game.gameOver)
