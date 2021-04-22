@@ -877,7 +877,7 @@ void *draw(void *params)
 					for (int x = 0; x < 32; x++) 
 					{	
 						pixel->color = tempPtr[i];
-						pixel->x = x + 32*j + 200;
+						pixel->x = x + 32*j + 230;
 						pixel->y = y;
 						
 						drawPixel(pixel);
