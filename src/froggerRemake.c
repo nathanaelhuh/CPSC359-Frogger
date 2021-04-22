@@ -541,9 +541,10 @@ void *draw(void *params)
 						i++;		
 				}
 			}
-			i = 0;
+
 			if(startHighlighted)
 			{
+				i = 0;
 				for (int y = 0; y < SelectionBar.height; y++)
 				{
 					for (int x = 0; x < SelectionBar.width; x++) 
@@ -559,6 +560,7 @@ void *draw(void *params)
 			}
 			else
 			{
+				i = 0;
 				for (int y = 0; y < SelectionBar.height; y++)
 				{
 					for (int x = 0; x < SelectionBar.width; x++) 
@@ -612,7 +614,7 @@ void *draw(void *params)
 			i=0;
 			for (int y = 0; y < Frog.height; y++)
 			{
-				for (int x = 0; x < Frog.height; x++) 
+				for (int x = 0; x < Frog.width; x++) 
 				{	
 						pixel->color = frogPtr[i]; 
 						pixel->x = x + (game.frog.x * 32);
